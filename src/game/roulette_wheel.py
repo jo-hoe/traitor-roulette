@@ -11,8 +11,8 @@ class RouletteWheel():
         self._wheel = self._generate_wheel()
 
     def spin(self) -> Pocket:
-        # select a random item in the _wheel and return it
         choses_pocket = random.choice(self._wheel)
+        # returning copy to avoid messing up the wheel by accident 
         return copy.deepcopy(choses_pocket)
 
 

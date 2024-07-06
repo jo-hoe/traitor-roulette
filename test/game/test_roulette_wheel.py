@@ -21,7 +21,7 @@ def test_generate_wheel():
 def test_spin():
     wheel = RouletteWheel()
 
-    for i in range(100):
+    for i in range(124):
         pocket = wheel.spin()
         assert pocket.number >= 0 and pocket.number <= 36, "Spin should return a pocket with a number between 0 and 36"
         assert pocket.type in [PocketType.GREEN, PocketType.RED, PocketType.BLACK, PocketType.TRAITOR], "Spin should return a pocket with a valid type"

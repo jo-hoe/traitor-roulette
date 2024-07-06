@@ -1,3 +1,5 @@
+import copy
+import random
 from typing import List
 from src.game.pocket import Pocket, PocketType
 
@@ -7,6 +9,12 @@ class RouletteWheel():
 
     def __init__(self) -> None:
         self._wheel = self._generate_wheel()
+
+    def spin(self) -> Pocket:
+        # select a random item in the _wheel and return it
+        choses_pocket = random.choice(self._wheel)
+        return copy.deepcopy(choses_pocket)
+
 
     def _generate_wheel(self) -> List[Pocket]:
         result = []

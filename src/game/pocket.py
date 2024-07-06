@@ -21,12 +21,12 @@ class Pocket():
     def type(self) -> PocketType:
         return self._type
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool: 
         if isinstance(self, other.__class__):
             return self._type == other.type and self.number == other.number
         return False
     
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.number, self.type))
     
     def __repr__(self) -> str: 

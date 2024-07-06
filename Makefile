@@ -25,4 +25,9 @@ save-dependencies: ## save current dependencies
 
 .PHONY: test
 test: ## runs all tests
-	${ROOT_DIR}.venv/Scripts/pytest ${ROOT_DIR}/test/
+	@${ROOT_DIR}.venv/Scripts/pytest ${ROOT_DIR}test/
+
+
+.PHONY: play
+play: ## play a game of traitors roulette
+	@${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}justplay.py

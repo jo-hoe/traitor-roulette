@@ -31,6 +31,12 @@ class Pocket():
     
     def __repr__(self) -> str: 
         return f"Pocket({self.number}, {self.type.name})"
+    
+    def __str__(self) -> str: 
+        return self.__repr__()
+
+
+
 
 
         

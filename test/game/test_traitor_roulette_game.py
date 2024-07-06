@@ -41,10 +41,13 @@ def test_play():
     for i in range(0, 124):
         # play three rounds
         for j in range(0, 3):
-            winnings = game.play(bet_size, random.choice([PocketType.RED, PocketType.BLACK]))
+            pocket, winnings = game.play(bet_size, random.choice([PocketType.RED, PocketType.BLACK]))
 
             if winnings != 0 and (winnings % (bet_size * 2) != 0) and (winnings % (bet_size * 3) != 0):
                 assert False, f"winnings was {winnings}, it should be between 0 or {bet_size * 2} or {bet_size * 3}"
+
+            if pocket == None:
+                assert False, "pocket should not be None"
 
             if j == 2:
                 assert game.bankroll >= min_final_bankroll and game.bankroll <= max_final_bankroll, f"bankroll was {game.bankroll}, it should be between {min_final_bankroll} and {max_final_bankroll}"

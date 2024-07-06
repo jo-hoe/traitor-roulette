@@ -1,7 +1,8 @@
 
 
 
-from src.game.pocket import PocketType
+from typing import Tuple
+from src.game.pocket import PocketType, Pocket
 from src.game.roulette_wheel import RouletteWheel
 
 MAX_ROUNDS = 3
@@ -34,7 +35,7 @@ class TraitorRouletteGame():
     def current_round(self):
         return self._round
 
-    def play(self, bet : int, prediction : PocketType) -> int:
+    def play(self, bet : int, prediction : PocketType) -> Tuple[Pocket, int]:
         '''
         Returns the winnings
         '''
@@ -66,7 +67,7 @@ class TraitorRouletteGame():
         self._bankroll += winnings
         self._round += 1
 
-        return winnings
+        return pocket, winnings
 
         
         

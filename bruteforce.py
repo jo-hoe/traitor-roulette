@@ -117,4 +117,4 @@ if __name__ == "__main__":
     plt.title('Bankroll vs Bet Percentage')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig('bruteforce.png')

@@ -1,9 +1,9 @@
 
 import argparse
-import csv
 import random
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 from tqdm import tqdm
 from src.game.pocket import PocketType
 from src.game.roulette_wheel import RouletteWheel
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Lets bruteforce Traitor Roulette.')
     parser.add_argument('--iterations_count', dest='iterations_count',
-                        default=10000, type=int,
+                        default=1000, type=int,
                         help='set the number of iterations per valid betting size, default is 10000')
     parser.add_argument('--step_size', dest='step_size',
                         default=.01, type=float,
@@ -96,6 +96,19 @@ if __name__ == "__main__":
         plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average AU$')
         plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum AU$')
         plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum AU$')
+
+        # Fit a polynomial to the average bankrolls
+        def poly_func(x, a, b, c, d):
+            return a * x**3 + b * x**2 + c * x + d
+
+        popt, _ = curve_fit(poly_func, bet_percentages, avg_bankrolls)
+
+        # Create a smooth line for the fit
+        x_smooth = np.linspace(bet_percentages.min(), bet_percentages.max(), 200)
+        y_smooth = poly_func(x_smooth, *popt)
+
+        # Plot the fitted line
+        plt.plot(x_smooth, y_smooth, 'k--', label='Fitted Average AU$')
     else:
         print("Unexpected results structure. Please check the data.")
         

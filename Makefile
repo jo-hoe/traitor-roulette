@@ -27,7 +27,10 @@ save-dependencies: ## save current dependencies
 test: ## runs all tests
 	@${ROOT_DIR}.venv/Scripts/pytest ${ROOT_DIR}test/
 
-
 .PHONY: play
 play: ## play a game of traitors roulette
 	@${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}justplay.py
+
+.PHONY: bruteforce
+bruteforce: ## bruteforces best static strategy
+	@${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}bruteforce.py

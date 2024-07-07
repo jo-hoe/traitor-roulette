@@ -24,6 +24,13 @@ if __name__ == "__main__":
         if input_bet.isdigit() == False or int(input_bet) % 2000 != 0:
             print('Invalid bet')
             continue
+        if int(input_bet) > game.bankroll:
+            print('Not enough money')
+            continue
+        if int(input_bet) > args.bankroll:
+            print(f'You cannot set more than your initial bankroll of {args.bankroll}')
+            continue
+
 
         pocket, winnings = game.play(int(input_bet), PocketType.RED if input_color == 'r' else PocketType.BLACK)
         print(f"Ball landed in {str(pocket)} you get {winnings}$ back. Your new bankroll is {str(game.bankroll)}")

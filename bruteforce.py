@@ -69,7 +69,7 @@ if __name__ == "__main__":
             # cannot bet 0
             if bet_size == 0:
                 bet_size = 2000
-            # cannot bet more than bankroll
+            # cannot bet more than current bankroll
             if bet_size > game.bankroll:
                 bet_size = game.bankroll
             # cannot bet more than initial bankroll
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         y_smooth = poly_func(x_smooth, *popt)
 
         # Plot the fitted line
-        plt.plot(x_smooth, y_smooth, 'k--', label='Fitted Average AU$')
+        plt.plot(x_smooth, y_smooth, '--', color='orange', label='Fitted Average AU$')
     else:
         print("Unexpected results structure. Please check the data.")
         

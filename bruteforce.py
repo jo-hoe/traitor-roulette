@@ -93,14 +93,14 @@ if __name__ == "__main__":
         min_bankrolls = results[:, 2]
         max_bankrolls = results[:, 3]
         
-        plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average')
-        plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum')
-        plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum')
+        plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average AU$')
+        plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum AU$')
+        plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum AU$')
     else:
         print("Unexpected results structure. Please check the data.")
         
     plt.xlabel('Bet %')
-    plt.ylabel('Final Bankroll')
+    plt.ylabel('Australian Dollars at the end of the game')
     plt.title('Bankroll vs Bet Percentage')
     plt.legend()
     plt.grid(True)

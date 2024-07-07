@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Lets bruteforce Traitor Roulette.')
     parser.add_argument('--iterations_count', dest='iterations_count',
-                        default=1000, type=int,
+                        default=10000, type=int,
                         help='set the number of iterations per valid betting size, default is 10000')
     parser.add_argument('--step_size', dest='step_size',
                         default=.01, type=float,

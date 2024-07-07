@@ -79,26 +79,29 @@ if __name__ == "__main__":
             game.play(bet_size, random.choice(
                 [PocketType.RED, PocketType.BLACK]))
 
-        results.append([run.bet_percentage, run.avg()])
-
+        results.append([run.bet_percentage, run.avg(), run.min(), run.max()])
 
     # Convert results to numpy array
     results = np.array(results)
 
     # Plotting
-    plt.figure(figsize=(10, 6))
-    if results.ndim == 2 and results.shape[1] == 2:
-        plt.plot(results[:, 0], results[:, 1], 'b-')
-    elif results.ndim == 1 and results.size % 2 == 0:
-        x = results[0::2]  # Even indices for bet percentages
-        y = results[1::2]  # Odd indices for average bankrolls
-        plt.plot(x, y, 'b-')
+    plt.figure(figsize=(12, 8))
+    
+    if results.ndim == 2 and results.shape[1] == 4:
+        bet_percentages = results[:, 0]
+        avg_bankrolls = results[:, 1]
+        min_bankrolls = results[:, 2]
+        max_bankrolls = results[:, 3]
+        
+        plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average')
+        plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum')
+        plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum')
     else:
         print("Unexpected results structure. Please check the data.")
         
-    plt.xlabel('Bet Percentage')
-    plt.ylabel('Average Final Bankroll')
-    plt.title('Average Final Bankroll vs Bet Percentage')
+    plt.xlabel('Bet %')
+    plt.ylabel('Final Bankroll')
+    plt.title('Bankroll vs Bet Percentage')
+    plt.legend()
     plt.grid(True)
     plt.show()
-

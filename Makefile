@@ -29,8 +29,8 @@ test: ## runs all tests
 
 .PHONY: play
 play: ## play a game of traitors roulette
-	@${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}justplay.py
+	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}justplay.py
 
-.PHONY: bruteforce
-bruteforce: ## bruteforces best static strategy
-	@${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}bruteforce.py
+.PHONY: bruteforce-simulation
+bruteforce-simulation: ## bruteforces best static percentage strategy
+	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}bruteforce.py

@@ -34,3 +34,7 @@ play: ## play a game of traitors roulette
 .PHONY: bruteforce-simulation
 bruteforce-simulation: ## bruteforces best static percentage strategy
 	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}bruteforce.py
+
+.PHONY: ml-play
+ml-play: ## train a model for traitors roulette of non exists and show results
+	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}machine_learning.py

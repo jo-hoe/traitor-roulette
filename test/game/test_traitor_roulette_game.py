@@ -28,7 +28,6 @@ def test_has_game_ended():
 def test_play():
     initial_bankroll = 68000
     bet_size = 2000
-    max_win_lose = bet_size * 2
     rounds = MAX_ROUNDS
     min_final_bankroll = initial_bankroll - (bet_size * rounds)
     # you can only win twice the amount on a traitor tile
@@ -53,6 +52,15 @@ def test_play():
                 assert game.bankroll >= min_final_bankroll and game.bankroll <= max_final_bankroll, f"bankroll was {game.bankroll}, it should be between {min_final_bankroll} and {max_final_bankroll}"
                 assert game.has_game_ended() == True, "game should have ended"
                 game.reset()
+
+
+def test_get_valid_bet_size():
+    assert TraitorRouletteGame.get_valid_bet_size(0, 68000, 68000) == 2000, "bet size should be 0"
+    assert TraitorRouletteGame.get_valid_bet_size(1, 68000, 68000) == 2000, "bet size should be 2000"
+    assert TraitorRouletteGame.get_valid_bet_size(100, 68000, 68000) == 68000, "bet size should be 68000"
+    assert TraitorRouletteGame.get_valid_bet_size(200, 68000, 68000) == 68000, "bet size should be 68000"
+    assert TraitorRouletteGame.get_valid_bet_size(50, 68000, 68000) == 34000, "bet size should be 34000"
+
 
 
 

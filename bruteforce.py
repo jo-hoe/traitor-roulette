@@ -9,6 +9,7 @@ from src.game.pocket import PocketType
 from src.game.roulette_wheel import RouletteWheel
 from src.game.traitor_roulette_game import TraitorRouletteGame
 
+
 class Run():
 
     def __init__(self, percentage: float) -> None:
@@ -63,18 +64,8 @@ if __name__ == "__main__":
                 game.reset()
                 continue
 
-            bet_size = game.bankroll * (run.bet_percentage / 100)
-            bet_size = round(bet_size / 2000) * 2000
-
-            # cannot bet 0
-            if bet_size == 0:
-                bet_size = 2000
-            # cannot bet more than current bankroll
-            if bet_size > game.bankroll:
-                bet_size = game.bankroll
-            # cannot bet more than initial bankroll
-            if bet_size > args.bankroll:
-                bet_size = args.bankroll
+            bet_size = TraitorRouletteGame.get_valid_bet_size(run.bet_percentage, game.initial_bankroll, game.bankroll)
+        
 
             game.play(bet_size, random.choice(
                 [PocketType.RED, PocketType.BLACK]))
@@ -85,7 +76,7 @@ if __name__ == "__main__":
     results = np.array(results)
 
     # Plotting
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(12, 10))
     
     if results.ndim == 2 and results.shape[1] == 4:
         bet_percentages = results[:, 0]
@@ -102,19 +93,21 @@ if __name__ == "__main__":
             return a * x**3 + b * x**2 + c * x + d
 
         popt, _ = curve_fit(poly_func, bet_percentages, avg_bankrolls)
+        poly_str = f"y = {popt[0]:g}x³ + {popt[1]:g}x² + {popt[2]:g}x + {popt[3]:g}"
 
         # Create a smooth line for the fit
         x_smooth = np.linspace(bet_percentages.min(), bet_percentages.max(), 200)
         y_smooth = poly_func(x_smooth, *popt)
 
         # Plot the fitted line
-        plt.plot(x_smooth, y_smooth, '--', color='orange', label='Fitted Average AU$')
+        plt.plot(x_smooth, y_smooth, '--', color='orange', label=f'{poly_str}')
     else:
         print("Unexpected results structure. Please check the data.")
         
-    plt.xlabel('Bet %')
-    plt.ylabel('Australian Dollars at the end of the game')
-    plt.title('Bankroll vs Bet Percentage')
+    plt.xlabel('Bet Percentage')
+    plt.ylabel('Australian Dollars (AU$) at the end of the game')
+    plt.title('Bankroll vs Bet Percentage (%)')
     plt.legend()
-    plt.grid(True)
+    plt.grid()
+    plt.tight_layout()
     plt.savefig('bruteforce.png')

@@ -17,6 +17,13 @@
             "request": "launch",
             "program": "${workspaceFolder}/bruteforce.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "ML play",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/machine_learning.py",
+            "console": "integratedTerminal"
         }
     ]
 }

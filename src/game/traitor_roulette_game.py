@@ -22,18 +22,27 @@ class TraitorRouletteGame():
     def bankroll(self):
         return self._bankroll
     
+    @property
+    def initial_bankroll(self):
+        return self._initial_bankroll
+    
+    @property
+    def current_round(self):
+        return self._round
+    
+    @property
+    def max_value(self):
+        return self._max_bankroll
+
     def has_game_ended(self) -> bool:
         return self._bankroll == 0 or \
-            self._bankroll >= self._initial_bankroll * MAX_MULTIPLIER or \
+            self._bankroll >= self._max_bankroll or \
             self._round > MAX_ROUNDS
     
     def reset(self):
         self._bankroll = self._initial_bankroll
         self._round = 1
     
-    @property
-    def current_round(self):
-        return self._round
 
     def play(self, bet : int, prediction : PocketType) -> Tuple[Pocket, int]:
         '''
@@ -68,6 +77,24 @@ class TraitorRouletteGame():
         self._round += 1
 
         return pocket, winnings
+    
+    @staticmethod
+    def get_valid_bet_size(bet_percentage : float, initial_bankroll : int, current_bankroll : int) -> int:
+        """
+        Implements constraints on betting size.
+        Return a valid bet size based on the percentage of the bankroll to bet.
+        """
+        bet_size = current_bankroll * (bet_percentage / 100)
+        bet_size = round(bet_size / 2000) * 2000
+        
+        # cannot bet 0
+        if bet_size == 0:
+            bet_size = 2000
+        # cannot bet more than current bankroll
+        if bet_size > current_bankroll:
+            bet_size = current_bankroll
+        # cannot bet more than initial bankroll
+        if bet_size > initial_bankroll:
+            bet_size = initial_bankroll
 
-        
-        
+        return bet_size

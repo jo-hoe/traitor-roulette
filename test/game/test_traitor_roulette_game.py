@@ -55,11 +55,13 @@ def test_play():
 
 
 def test_get_valid_bet_size():
-    assert TraitorRouletteGame.get_valid_bet_size(0, 68000, 68000) == 2000, "bet size should be 0"
-    assert TraitorRouletteGame.get_valid_bet_size(1, 68000, 68000) == 2000, "bet size should be 2000"
-    assert TraitorRouletteGame.get_valid_bet_size(100, 68000, 68000) == 68000, "bet size should be 68000"
-    assert TraitorRouletteGame.get_valid_bet_size(200, 68000, 68000) == 68000, "bet size should be 68000"
-    assert TraitorRouletteGame.get_valid_bet_size(50, 68000, 68000) == 34000, "bet size should be 34000"
+    initial_bankroll = 68000
+    game = TraitorRouletteGame(initial_bankroll)
+    assert game.get_valid_bet_size(0) == 2000, "bet size should be 0"
+    assert game.get_valid_bet_size(1) == 2000, "bet size should be 2000"
+    assert game.get_valid_bet_size(100) == 68000, "bet size should be 68000"
+    assert game.get_valid_bet_size(200) == 68000, "bet size should be 68000"
+    assert game.get_valid_bet_size(50) == 34000, "bet size should be 34000"
 
 
 

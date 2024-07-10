@@ -78,23 +78,22 @@ class TraitorRouletteGame():
 
         return pocket, winnings
     
-    @staticmethod
-    def get_valid_bet_size(bet_percentage : float, initial_bankroll : int, current_bankroll : int) -> int:
+    def get_valid_bet_size(self, bet_percentage : float) -> int:
         """
         Implements constraints on betting size.
         Return a valid bet size based on the percentage of the bankroll to bet.
         """
-        bet_size = current_bankroll * (bet_percentage / 100)
+        bet_size = self._bankroll * (bet_percentage / 100)
         bet_size = round(bet_size / 2000) * 2000
         
         # cannot bet 0
         if bet_size == 0:
             bet_size = 2000
         # cannot bet more than current bankroll
-        if bet_size > current_bankroll:
-            bet_size = current_bankroll
+        if bet_size > self._bankroll:
+            bet_size = self._bankroll
         # cannot bet more than initial bankroll
-        if bet_size > initial_bankroll:
-            bet_size = initial_bankroll
+        if bet_size > self._initial_bankroll:
+            bet_size = self._initial_bankroll
 
         return bet_size

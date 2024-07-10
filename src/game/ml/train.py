@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from stable_baselines3 import PPO, SAC, DQN, A2C
 from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.evaluation import evaluate_policy
 
 from src.game.ml.ml_environment import create_environment
 
@@ -38,35 +39,29 @@ class CustomCallback(BaseCallback):
             self.std_devs.append(np.std(rewards))
             self.final_bankrolls.append(obs[0])
         return True
+    
+class BetPercentageCallback(BaseCallback):
+    def __init__(self, verbose=0):
+        super(BetPercentageCallback, self).__init__(verbose)
+        self.bet_percentages = []
+
+    def _on_step(self) -> bool:
+        bet_percentage = self.training_env.actions[len(self.training_env.actions) - 1]
+        #print(bet_percentage)
+        self.bet_percentages.append(bet_percentage)
+        if len(self.bet_percentages) % 1000 == 0:
+            mean_bet = sum(self.bet_percentages[-1000:]) / 1000
+            print(f"Average bet percentage over last 1000 steps: {mean_bet:.2f}")
+        return True
 
 def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
     env = create_environment(initial_bankroll)
-    model = A2C(
+    model = SAC(
         "MlpPolicy",
-        env,
-        ent_coef=0.01,  # Entropy coefficient for exploration
-        vf_coef=0.5,    # Value function coefficient
-        max_grad_norm=0.5,
-        verbose=1
+        env
     )
 
-    callback = CustomCallback()
-    model.learn(total_timesteps=total_timesteps, callback=callback)
-    model.save(model_file_path)
-    
-    # Plot loss and std dev
-    plt.figure(figsize=(12, 6))
-    plt.subplot(2, 1, 1)
-    plt.plot(callback.losses)
-    plt.title('Training Loss')
-    plt.ylabel('Loss')
-    
-    plt.subplot(2, 1, 2)
-    plt.plot(callback.std_devs)
-    plt.title('Standard Deviation of Rewards')
-    plt.xlabel('Iterations (x1000)')
-    plt.ylabel('Std Dev')
-    
-    plt.tight_layout()
-    plt.savefig('training_progress.png')
-    plt.close()
+    model.learn(total_timesteps=500000, log_interval=1000, callback=BetPercentageCallback())
+    model.save(model_file_path)# Evaluate the agent
+    mean_bet, std_bet = evaluate_policy(model, model.get_env(), n_eval_episodes=100, return_episode_rewards=False)
+    print(f"Mean bet percentage: {mean_bet:.2f} +/- {std_bet:.2f}")

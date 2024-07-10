@@ -1,16 +1,17 @@
+import math
 import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 import random
+
+from stable_baselines3 import SAC
 from src.game.pocket import PocketType
 from src.game.traitor_roulette_game import TraitorRouletteGame
-from stable_baselines3.common.vec_env import DummyVecEnv
+from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
 def create_environment(initial_bankroll : int) -> VecEnv:
-    # Create and wrap the environment
-    env = TraitorRouletteEnv(initial_bankroll)
-    return DummyVecEnv([lambda: env])
+    return make_vec_env(lambda: TraitorRouletteEnv(initial_bankroll), n_envs=1)
 
 class TraitorRouletteEnv(gym.Env):
 
@@ -22,11 +23,11 @@ class TraitorRouletteEnv(gym.Env):
         
         # Action space: bet_percentage (1-100)
         self.action_space = spaces.Box(low=1.0, high=100.0, shape=())
-        
-        # Observation space: [current_bankroll, current_round]
+
+        # Observation space: [current_round, bankroll]
         self.observation_space = spaces.Box(
-            low=np.array([0, 1]),  # Minimum values for bankroll and round
-            high=np.array([3*initial_bankroll, 3]),  # Maximum values
+            low=np.array([1, 0]),  # Minimum values for [current_round, bankroll]
+            high=np.array([4, 1]),  # Maximum values for [current_round, bankroll]
             dtype=np.float32
         )
 
@@ -37,10 +38,8 @@ class TraitorRouletteEnv(gym.Env):
 
     def step(self, action):
         bet_percentage = action
-        print(bet_percentage)
         
-        bet_size = TraitorRouletteGame.get_valid_bet_size(bet_percentage, self.game.initial_bankroll, self.game.bankroll)
-        
+        bet_size = self.game.get_valid_bet_size(bet_percentage)  
         color = random.choice([PocketType.RED, PocketType.BLACK])
         
         self.game.play(bet_size, color)
@@ -51,11 +50,12 @@ class TraitorRouletteEnv(gym.Env):
         return self._get_obs(), reward, done, False, {}
 
     def _get_obs(self):
+        # Observation space: [current_round, bankroll]
         return np.array([
-            float(self.game.bankroll),
-            float(self.game.current_round)
+            self.game.current_round / 4,
+            self.game.bankroll / self.game.max_value
         ], dtype=np.float32)
-    
+        
     def _get_reward(self) -> float:
         reward = 0
         # reward winnings

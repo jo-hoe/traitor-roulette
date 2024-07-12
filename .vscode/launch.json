@@ -23,7 +23,8 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/machine_learning.py",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "args": ["--total_timesteps", "1000"]
         }
     ]
 }

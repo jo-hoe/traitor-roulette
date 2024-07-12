@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 game.reset()
                 continue
 
-            bet_size = TraitorRouletteGame.get_valid_bet_size(run.bet_percentage, game.initial_bankroll, game.bankroll)
+            bet_size = game.get_valid_bet_size(run.bet_percentage)
         
 
             game.play(bet_size, random.choice(
@@ -84,9 +84,9 @@ if __name__ == "__main__":
         min_bankrolls = results[:, 2]
         max_bankrolls = results[:, 3]
         
-        plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average AU$')
-        plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum AU$')
-        plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum AU$')
+        plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average (AU$)')
+        plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum (AU$)')
+        plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum (AU$)')
 
         # Fit a polynomial to the average bankrolls
         def poly_func(x, a, b, c, d):
@@ -104,10 +104,12 @@ if __name__ == "__main__":
     else:
         print("Unexpected results structure. Please check the data.")
         
-    plt.xlabel('Bet Percentage')
+    plt.xlabel('Bet Percentage (%)')
     plt.ylabel('Australian Dollars (AU$) at the end of the game')
     plt.title('Bankroll vs Bet Percentage (%)')
     plt.legend()
     plt.grid()
     plt.tight_layout()
+    x_ticks = np.arange(0, 101, 5)
+    plt.xticks(x_ticks)
     plt.savefig('bruteforce.png')

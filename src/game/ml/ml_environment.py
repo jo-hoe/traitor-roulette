@@ -21,8 +21,8 @@ class TraitorRouletteEnv(gym.Env):
         self.initial_bankroll = initial_bankroll
         self.max_bet_percentage = 0
         
-        # Action space: bet_percentage (1-100)
-        self.action_space = spaces.Box(low=1.0, high=100.0, shape=())
+        # Action space: bet_percentage (.01-1)
+        self.action_space = spaces.Box(low=0.01, high=1.0, shape=())
 
         # Observation space: [current_round, bankroll]
         self.observation_space = spaces.Box(
@@ -39,7 +39,7 @@ class TraitorRouletteEnv(gym.Env):
     def step(self, action):
         bet_percentage = action
         
-        bet_size = self.game.get_valid_bet_size(bet_percentage)  
+        bet_size = self.game.get_valid_bet_size(bet_percentage * 100)  
         color = random.choice([PocketType.RED, PocketType.BLACK])
         
         self.game.play(bet_size, color)

@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from stable_baselines3 import PPO
+from stable_baselines3 import SAC
 
 from src.game.ml.ml_environment import create_environment
 
 def evaluate(model_path: str, initial_bankroll : int, num_episodes: int = 1000):
-    model = PPO.load(model_path)
+    model = SAC.load(model_path)
     total_rewards = []
     bet_sizes = [[] for _ in range(3)]  # List for each round
     final_bankrolls = []

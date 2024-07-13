@@ -1,9 +1,20 @@
+import statistics
+from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 from stable_baselines3 import SAC
 
 from src.game.ml.ml_environment import create_environment
 from stable_baselines3.common.evaluation import evaluate_policy
+    
+def _flatten(matrix):
+    return [x for xs in matrix for x in xs]
+    
+def _get_nth_elements(input:List[List[float]], n : int) -> List[float]:
+    return [sublist[n] for sublist in input if n < len(sublist)]
+
+def _get_moving_average(input:List[float], window_size: int) -> List[float]:
+    return [statistics.mean(input[i:i+window_size]) for i in range(len(input)-window_size+1)]
 
 def evaluate(model_path: str, initial_bankroll : int, num_episodes: int = 1000):
     model = SAC.load(model_path)

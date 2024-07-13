@@ -2,7 +2,7 @@ import statistics
 from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
-from stable_baselines3 import PPO, SAC, DQN, A2C
+from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.evaluation import evaluate_policy
 
@@ -39,12 +39,6 @@ class BetPercentageCallback(BaseCallback):
                 [final_observations[0] * 4 -1, final_observations[1] * game.max_value]
             )
 
-        if len(self.bet_percentages) % self.output_interval == 0 and round == 3:
-            print(f"Average bet % in round 1 over last {self.output_interval} elements {statistics.mean(_get_nth_elements(self.bet_percentages[self.output_interval*-1:], 0))}")
-            print(f"Average bet % in round 2 over last {self.output_interval}  elements {statistics.mean(_get_nth_elements(self.bet_percentages[self.output_interval*-1:], 1))}")
-            print(f"Average bet % in round 3 over last {self.output_interval}  elements {statistics.mean(_get_nth_elements(self.bet_percentages[self.output_interval*-1:], 2))}")
-            print(f"Average reward over last {self.output_interval} elements {statistics.mean(_flatten(self.rewards[self.output_interval*-1:]))}")
-
         return super()._on_step()
     
     def _get_final_observations_before_reset(self):
@@ -58,6 +52,9 @@ def _flatten(matrix):
 def _get_nth_elements(input:List[List[float]], n : int) -> List[float]:
     return [sublist[n] for sublist in input if n < len(sublist)]
 
+def _get_moving_average(input:List[float], window_size: int) -> List[float]:
+    return [statistics.mean(input[i:i+window_size]) for i in range(len(input)-window_size+1)]
+
 def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
     env = create_environment(initial_bankroll)
     model = SAC(
@@ -65,7 +62,20 @@ def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
         env
     )
 
-    model.learn(total_timesteps=total_timesteps, log_interval=1000, callback=BetPercentageCallback(int(total_timesteps/100)))
+    callback = BetPercentageCallback(int(total_timesteps/100))
+    model.learn(total_timesteps=total_timesteps, callback=callback, progress_bar=True)
+
+    rewards = _flatten(callback.rewards)
+    moving_avg_rewards = _get_moving_average(rewards, int(total_timesteps/100))
+    game_number = [i for i in range(0, len(moving_avg_rewards))]
+
     model.save(model_file_path)
     mean_bet, std_bet = evaluate_policy(model, model.get_env(), n_eval_episodes=100, return_episode_rewards=False)
     print(f"Mean bet percentage: {mean_bet:.2f} +/- {std_bet:.2f}")
+
+    plt.figure(figsize=(12, 10))
+    plt.plot(game_number, moving_avg_rewards, 'b-', label='Moving average over rewards [-1, 1]')
+    plt.xlabel('Steps')
+    plt.ylabel('Reward [-1, 1]')
+    plt.title('Reward over time steps')
+    plt.show()

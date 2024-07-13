@@ -8,8 +8,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Train and evaluate a machine learning model on Traitor Roulette.')
     parser.add_argument('--total_timesteps', dest='total_timesteps',
-                        default=100000, type=int,
-                        help='set the number of trained time steps, default is 100000')
+                        default=131072, type=int,
+                        help='set the number of trained time steps, default is 131072')
     parser.add_argument('--bankroll', dest='bankroll',
                         default=68000, type=int,
                         help='set your initial bankroll should be a multiple of 2000, default is 68000')

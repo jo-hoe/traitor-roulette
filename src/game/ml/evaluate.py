@@ -3,9 +3,13 @@ import numpy as np
 from stable_baselines3 import SAC
 
 from src.game.ml.ml_environment import create_environment
+from stable_baselines3.common.evaluation import evaluate_policy
 
 def evaluate(model_path: str, initial_bankroll : int, num_episodes: int = 1000):
     model = SAC.load(model_path)
+    mean_bet, std_bet = evaluate_policy(model, model.get_env(), n_eval_episodes=100, return_episode_rewards=False)
+    print(f"Mean bet percentage: {mean_bet:.2f} +/- {std_bet:.2f}")
+
     total_rewards = []
     bet_sizes = [[] for _ in range(3)]  # List for each round
     final_bankrolls = []

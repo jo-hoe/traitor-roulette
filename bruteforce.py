@@ -1,4 +1,5 @@
 
+import os
 import argparse
 import random
 import numpy as np
@@ -35,8 +36,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Lets bruteforce Traitor Roulette.')
     parser.add_argument('--iterations_count', dest='iterations_count',
-                        default=10000, type=int,
-                        help='set the number of iterations per valid betting size, default is 10000')
+                        default=131072, type=int,
+                        help='set the number of iterations per valid betting size, default is 2^17')
     parser.add_argument('--step_size', dest='step_size',
                         default=.01, type=float,
                         help='step size for the betting percentage, default is .01')
@@ -49,7 +50,6 @@ if __name__ == "__main__":
         raise ValueError("Bankroll should be a multiple of 2000")
     if args.step_size < .000001:
         raise ValueError("Cannot run with step size less than .000001")
-
 
     results = []
 
@@ -65,7 +65,6 @@ if __name__ == "__main__":
                 continue
 
             bet_size = game.get_valid_bet_size(run.bet_percentage)
-        
 
             game.play(bet_size, random.choice(
                 [PocketType.RED, PocketType.BLACK]))
@@ -77,33 +76,19 @@ if __name__ == "__main__":
 
     # Plotting
     plt.figure(figsize=(12, 10))
-    
+
     if results.ndim == 2 and results.shape[1] == 4:
         bet_percentages = results[:, 0]
         avg_bankrolls = results[:, 1]
         min_bankrolls = results[:, 2]
         max_bankrolls = results[:, 3]
-        
+
         plt.plot(bet_percentages, avg_bankrolls, 'b-', label='Average (AU$)')
         plt.plot(bet_percentages, min_bankrolls, 'r-', label='Minimum (AU$)')
         plt.plot(bet_percentages, max_bankrolls, 'g-', label='Maximum (AU$)')
-
-        # Fit a polynomial to the average bankrolls
-        def poly_func(x, a, b, c, d):
-            return a * x**3 + b * x**2 + c * x + d
-
-        popt, _ = curve_fit(poly_func, bet_percentages, avg_bankrolls)
-        poly_str = f"y = {popt[0]:g}x³ + {popt[1]:g}x² + {popt[2]:g}x + {popt[3]:g}"
-
-        # Create a smooth line for the fit
-        x_smooth = np.linspace(bet_percentages.min(), bet_percentages.max(), 200)
-        y_smooth = poly_func(x_smooth, *popt)
-
-        # Plot the fitted line
-        plt.plot(x_smooth, y_smooth, '--', color='orange', label=f'{poly_str}')
     else:
         print("Unexpected results structure. Please check the data.")
-        
+
     plt.xlabel('Bet Percentage (%)')
     plt.ylabel('Australian Dollars (AU$) at the end of the game')
     plt.title('Bankroll vs Bet Percentage (%)')
@@ -112,4 +97,7 @@ if __name__ == "__main__":
     plt.tight_layout()
     x_ticks = np.arange(0, 101, 5)
     plt.xticks(x_ticks)
-    plt.savefig('bruteforce.png')
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    output_path = os.path.join(dir_path, "output", "bruteforce.png")
+    plt.savefig(output_path)

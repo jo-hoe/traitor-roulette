@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import os
 
 from src.game.ml.train import train
@@ -15,8 +16,11 @@ if __name__ == "__main__":
                         help='set your initial bankroll should be a multiple of 2000, default is 68000')
     args = parser.parse_args()
 
-    model_file_path = "ppo_trained_model.zip"
-    if not os.path.isfile(model_file_path):
-        train(model_file_path, initial_bankroll=args.bankroll, total_timesteps=args.total_timesteps)
-    
-    # evaluate(model_file_path, initial_bankroll=args.bankroll)
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    date = datetime.now().strftime("%Y%m%d_%H%M")
+
+    output_path = os.path.join(
+        dir_path, "output", f"ppo_trained_model_{date}.zip")
+
+    train(output_path, initial_bankroll=args.bankroll,
+          total_timesteps=args.total_timesteps)

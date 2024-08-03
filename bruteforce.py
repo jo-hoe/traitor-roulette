@@ -29,35 +29,15 @@ class Run():
         self.final_bankrolls.append(bankroll)
 
 
-if __name__ == "__main__":
-    wheel = RouletteWheel()
-
-    parser = argparse.ArgumentParser(
-        description='Lets bruteforce Traitor Roulette.')
-    parser.add_argument('--iterations_count', dest='iterations_count',
-                        default=131072, type=int,
-                        help='set the number of iterations per valid betting size, default is 2^17')
-    parser.add_argument('--step_size', dest='step_size',
-                        default=.01, type=float,
-                        help='step size for the betting percentage, default is .01')
-    parser.add_argument('--bankroll', dest='bankroll',
-                        default=68000, type=int,
-                        help='set your initial bankroll should be a multiple of 2000, default is 68000')
-    args = parser.parse_args()
-
-    if args.bankroll % 2000 != 0:
-        raise ValueError("Bankroll should be a multiple of 2000")
-    if args.step_size < .000001:
-        raise ValueError("Cannot run with step size less than .000001")
-
+def play(bankroll: int, iterations_count: int, step_size: float):
     results = []
 
-    game = TraitorRouletteGame(args.bankroll)
-    run_count = 100/args.step_size
+    game = TraitorRouletteGame(bankroll)
+    run_count = 100/step_size
     for i in tqdm(range(1, int(run_count) + 1)):
         run = Run(round(i/run_count * 100, 6))
 
-        for j in range(args.iterations_count):
+        for _ in range(iterations_count):
             if game.has_game_ended():
                 run.add_final_bankroll(game.bankroll)
                 game.reset()
@@ -71,9 +51,22 @@ if __name__ == "__main__":
         results.append([run.bet_percentage, run.avg(), run.min(), run.max()])
 
     # Convert results to numpy array
-    results = np.array(results)
+    return np.array(results)
 
-    # Plotting
+
+def print_results(results: np.ndarray, default_bankroll):
+    run_with_best_avg = results[np.argmax(results[:, 1])]
+
+    file_path = generate_filepath("bruteforce.txt")
+    # Writing results to a file
+    with open(file_path, "w") as f:
+        f.write(f"Bet percentage with best average: \
+                {run_with_best_avg[0]}\n")
+        f.write(f"Average final bankroll: \
+                {run_with_best_avg[1]}\n")
+
+
+def plot_results(results: np.ndarray):
     plt.figure(figsize=(12, 10))
 
     if results.ndim == 2 and results.shape[1] == 4:
@@ -97,4 +90,35 @@ if __name__ == "__main__":
     x_ticks = np.arange(0, 101, 5)
     plt.xticks(x_ticks)
 
-    plt.savefig(generate_filepath("bruteforce.png"))
+    plt.savefig(generate_filepath("bruteforce.png"), dpi=600)
+
+
+if __name__ == "__main__":
+    default_bankroll = 68000
+    default_iterations_count = 1 << 17
+    default_step_size = .01
+
+    wheel = RouletteWheel()
+
+    parser = argparse.ArgumentParser(
+        description='Lets bruteforce Traitor Roulette.')
+    parser.add_argument('--iterations_count', dest='iterations_count',
+                        default=default_iterations_count, type=int,
+                        help=f'set the number of iterations per valid betting size, default is {default_iterations_count}')
+    parser.add_argument('--step_size', dest='step_size',
+                        default=default_step_size, type=float,
+                        help=f'step size for the betting percentage, default is {default_step_size}')
+    parser.add_argument('--bankroll', dest='bankroll',
+                        default=default_bankroll, type=int,
+                        help=f'set your initial bankroll should be a multiple of 2000, default is {default_bankroll}')
+    args = parser.parse_args()
+
+    if args.bankroll % 2000 != 0:
+        raise ValueError("Bankroll should be a multiple of 2000")
+    if args.step_size < .000001:
+        raise ValueError("Cannot run with step size less than .000001")
+
+    results = play(args.bankroll, args.iterations_count, args.step_size)
+
+    print_results(results, args.bankroll)
+    plot_results(results)

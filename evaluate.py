@@ -54,7 +54,7 @@ def play(model_path: str, initial_bankroll: int, num_games: int) -> List[Dict]:
     return games
 
 
-def analyze_result_betsize(games: List[Dict]) -> None:
+def plot_betsize(games: List[Dict]) -> None:
     bet_sizes = {1: [], 2: [], 3: []}
 
     # Iterate through all games and collect bet sizes per round
@@ -89,6 +89,11 @@ def analyze_result_betsize(games: List[Dict]) -> None:
     plt.ylabel('Average Bet Size')
     plt.title('Average Bet Size per Round with Standard Deviation')
     plt.grid(axis='y')
+
+    for i in range(len(np_averages)):
+        plt.text(i, np_averages[i] + (0.05 * np.max(np_averages)),
+                 f'{np_averages[i]:.2f}', ha='center', va='baseline', fontsize=10)
+
     plt.savefig(generate_filepath("ai-betsize.png"), dpi=600)
 
 
@@ -132,7 +137,8 @@ def print_results(games: list, num_games: int, default_bankroll: int):
     with open(file_path, "w") as f:
         f.write(f"{bust_percentage}% of games where going bust\n")
         f.write(f"{max_percentage}% of games achieved the maximum bankroll\n")
-        f.write(f"Average bet size in the first round: {avg_bet_size_first_round}\n")
+        f.write(
+            f"Average bet size in the first round: {avg_bet_size_first_round}\n")
         f.write(f"Average final bankroll: {average_final_bankroll}\n")
 
 
@@ -158,7 +164,7 @@ if __name__ == "__main__":
 
     games = play(model_path, args.bankroll, args.num_games)
 
-    analyze_result_betsize(games)
+    plot_betsize(games)
 
     print_results(games, args.num_games, default_bankroll)
     plot_all_games(games)

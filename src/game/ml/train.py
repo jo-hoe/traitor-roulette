@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import BaseCallback
 
+from src.common import generate_filepath
 from src.game.ml.ml_environment import create_environment
     
 class BetPercentageCallback(BaseCallback):
@@ -45,4 +46,5 @@ def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
     plt.ylabel('Loss')
     plt.title('SAC Loss Functions')
     plt.legend()
-    plt.savefig('sac_losses.png')
+    
+    plt.savefig(generate_filepath('sac_losses.png'))

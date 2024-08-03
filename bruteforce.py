@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from tqdm import tqdm
+from src.common import generate_filepath
 from src.game.pocket import PocketType
 from src.game.roulette_wheel import RouletteWheel
 from src.game.traitor_roulette_game import TraitorRouletteGame
@@ -98,6 +99,4 @@ if __name__ == "__main__":
     x_ticks = np.arange(0, 101, 5)
     plt.xticks(x_ticks)
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    output_path = os.path.join(dir_path, "output", "bruteforce.png")
-    plt.savefig(output_path)
+    plt.savefig(generate_filepath("bruteforce.png"))

@@ -1,20 +1,20 @@
 import argparse
-from collections import defaultdict
 import os
-import random
+from typing import Dict, List
 from matplotlib import pyplot as plt
 import numpy as np
 from stable_baselines3 import SAC
 
+from src.common import generate_filepath
 from src.game.ml.ml_environment import create_environment, reward_to_bankroll
 
 
-def evaluate(model_path: str, initial_bankroll: int, num_episodes: int = 1 << 13):
+def play(model_path: str, initial_bankroll: int, num_games: int) -> List[Dict]:
     model = SAC.load(model_path)
 
     games = []
     env = create_environment(initial_bankroll)
-    for _ in range(num_episodes):
+    for _ in range(num_games):
         max_bankroll = env.unwrapped.envs[0].unwrapped.game.max_value
         initial_bankroll = env.unwrapped.envs[0].unwrapped.game.initial_bankroll
         observation = env.reset()
@@ -50,10 +50,7 @@ def evaluate(model_path: str, initial_bankroll: int, num_episodes: int = 1 << 13
 
         games.append(game)
 
-
-    plot_all_games(games)
-
-
+    return games
 
 
 def plot_all_games(games: list):
@@ -71,25 +68,31 @@ def plot_all_games(games: list):
     plt.xticks(range(0, 4))  # Assuming max 3 rounds
     plt.xlim(0, 3)
     plt.grid()
-    plt.show()
+
+    plt.savefig(generate_filepath("ai-behavior.png"), dpi=600)
 
 
 if __name__ == "__main__":
+    default_bankroll = 68000
+    default_num_games = 1 << 10
+
     parser = argparse.ArgumentParser(
         description='Evaluate a machine learning model of Traitor Roulette.')
     parser.add_argument('--model-name', dest='model_name',
                         type=str,
                         help='name of the model in output folder')
     parser.add_argument('--bankroll', dest='bankroll',
-                        default=68000, type=int,
-                        help='set your initial bankroll should be a multiple of 2000, default is 68000')
-    parser.add_argument('--num-episodes', dest='num_episodes',
-                        default=1 << 10, type=int,
-                        help='set the number of simulated episodes, default is 1024')
+                        default=default_bankroll, type=int,
+                        help=f'set your initial bankroll should be a multiple of 2000, default is {default_bankroll}')
+    parser.add_argument('--num-games', dest='num_games',
+                        default=default_num_games, type=int,
+                        help=f'set the number of simulated games, default is {default_num_games}')
     args = parser.parse_args()
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     model_path = os.path.join(
         dir_path, "output", args.model_name)
 
-    evaluate(model_path, args.bankroll, args.num_episodes)
+    games = play(model_path, args.bankroll, args.num_games)
+
+    plot_all_games(games)

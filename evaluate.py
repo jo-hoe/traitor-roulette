@@ -6,7 +6,7 @@ import numpy as np
 from stable_baselines3 import SAC
 from tqdm import tqdm
 
-from src.common import generate_filepath
+from src.common import generate_filepath, get_output_dir_path
 from src.game.ml.ml_environment import create_environment, reward_to_bankroll
 
 
@@ -115,7 +115,7 @@ def print_results(games: list, num_games: int, default_bankroll: int):
     bust_counter = 0
     max_counter = 0
     final_bankrolls = [game[-1]["bankroll"] for game in games]
-    bet_sizes_first_round = [game[0]["bet_size"] for game in games]
+    bet_sizes_first_round = [game[1]["bet_size"] for game in games]
 
     bust_counter = sum(
         1 for final_bankroll in final_bankrolls if final_bankroll == 0)
@@ -139,12 +139,13 @@ def print_results(games: list, num_games: int, default_bankroll: int):
 if __name__ == "__main__":
     default_bankroll = 68000
     default_num_games = 1 << 16
+    default_model_name = "ppo_trained_model.zip"
 
     parser = argparse.ArgumentParser(
         description='Evaluate a machine learning model of Traitor Roulette.')
     parser.add_argument('--model-name', dest='model_name',
-                        type=str,
-                        help='name of the model in output folder')
+                        type=str, default=default_model_name,
+                        help=f'name of the model in output folder, default is {default_model_name}')
     parser.add_argument('--bankroll', dest='bankroll',
                         default=default_bankroll, type=int,
                         help=f'set your initial bankroll should be a multiple of 2000, default is {default_bankroll}')
@@ -153,9 +154,7 @@ if __name__ == "__main__":
                         help=f'set the number of simulated games, default is {default_num_games}')
     args = parser.parse_args()
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    model_path = os.path.join(
-        dir_path, "output", args.model_name)
+    model_path = os.path.join(get_output_dir_path(), args.model_name)
 
     games = play(model_path, args.bankroll, args.num_games)
 

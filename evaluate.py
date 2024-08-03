@@ -1,6 +1,7 @@
 import argparse
+from collections import defaultdict
 import os
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from matplotlib import pyplot as plt
 import numpy as np
 from stable_baselines3 import SAC
@@ -53,6 +54,42 @@ def play(model_path: str, initial_bankroll: int, num_games: int) -> List[Dict]:
 
     return games
 
+
+def analyze_result_betsize(games: List[Dict]) -> None:
+    bet_sizes = {1: [], 2: [], 3: []}
+
+    # Iterate through all games and collect bet sizes per round
+    for game in games:
+        for round_data in game:
+            round_num = round_data["round"]
+            bet_size = round_data["bet_size"]
+            if bet_size is not None:  # Make sure bet size is valid
+                bet_sizes[round_num].append(bet_size)
+
+    # Calculate average and standard deviation for each round
+    averages = []
+    std_devs = []
+    for round_num in range(1, 4):
+        if bet_sizes[round_num]:  # Check if there are any bets for this round
+            averages.append(np.mean(bet_sizes[round_num]))
+            std_devs.append(np.std(bet_sizes[round_num]))
+        else:
+            averages.append(0)  # No bets to average
+            std_devs.append(0)  # No bets to calculate std deviation
+
+    np_averages = np.array(averages)
+    np_std_devs =np.array(std_devs)
+
+    rounds = [1, 2, 3]
+    x = np.arange(len(rounds))
+
+    plt.bar(x, np_averages, yerr=np_std_devs, capsize=5, color='lightblue', edgecolor='black')
+    plt.xticks(x, [f'Round {i}' for i in rounds])
+    plt.xlabel('Game Rounds')
+    plt.ylabel('Average Bet Size')
+    plt.title('Average Bet Size per Round with Standard Deviation')
+    plt.grid(axis='y')
+    plt.savefig(generate_filepath("ai-betsize.png"), dpi=600)
 
 def plot_all_games(games: list):
     # Visualization
@@ -116,6 +153,8 @@ if __name__ == "__main__":
         dir_path, "output", args.model_name)
 
     games = play(model_path, args.bankroll, args.num_games)
+    
+    analyze_result_betsize(games)
 
     print_results(games, args.num_games)
     plot_all_games(games)

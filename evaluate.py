@@ -1,16 +1,19 @@
 import argparse
+from collections import defaultdict
 import os
+import random
+from matplotlib import pyplot as plt
+import numpy as np
 from stable_baselines3 import SAC
 
 from src.game.ml.ml_environment import create_environment, reward_to_bankroll
 
 
-def evaluate(model_path: str, initial_bankroll: int, num_episodes: int = 1000):
+def evaluate(model_path: str, initial_bankroll: int, num_episodes: int = 1 << 13):
     model = SAC.load(model_path)
 
     games = []
     env = create_environment(initial_bankroll)
-
     for _ in range(num_episodes):
         max_bankroll = env.unwrapped.envs[0].unwrapped.game.max_value
         initial_bankroll = env.unwrapped.envs[0].unwrapped.game.initial_bankroll
@@ -48,6 +51,28 @@ def evaluate(model_path: str, initial_bankroll: int, num_episodes: int = 1000):
         games.append(game)
 
     print(len(games))
+
+
+def plot_all_games(games: list):
+    all_rounds = np.array([])
+    all_bankrolls = np.array([])
+
+    for game in games:
+        rounds = np.array([x["round"] for x in game])
+        bankrolls = np.array([x["bankroll"] for x in game])
+
+        all_rounds = np.concatenate((all_rounds, rounds))
+        all_bankrolls = np.concatenate((all_bankrolls, bankrolls))
+    # Plotting
+    plt.figure(figsize=(10, 5))
+    plt.plot(all_rounds, all_bankrolls, marker='o', linestyle='-', color='b')
+    plt.title("Bankroll Over Rounds")
+    plt.xlabel("Round")
+    plt.ylabel("Bankroll")
+    plt.grid()
+    plt.xticks(range(0, 4))  # Assuming max 3 rounds
+    plt.xlim(0, 3)
+    plt.show()
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ from typing import Dict, List
 from matplotlib import pyplot as plt
 import numpy as np
 from stable_baselines3 import SAC
+from tqdm import tqdm
 
 from src.common import generate_filepath
 from src.game.ml.ml_environment import create_environment, reward_to_bankroll
@@ -14,7 +15,7 @@ def play(model_path: str, initial_bankroll: int, num_games: int) -> List[Dict]:
 
     games = []
     env = create_environment(initial_bankroll)
-    for _ in range(num_games):
+    for _ in tqdm(range(num_games)):
         max_bankroll = env.unwrapped.envs[0].unwrapped.game.max_value
         initial_bankroll = env.unwrapped.envs[0].unwrapped.game.initial_bankroll
         observation = env.reset()
@@ -72,9 +73,30 @@ def plot_all_games(games: list):
     plt.savefig(generate_filepath("ai-behavior.png"), dpi=600)
 
 
+def print_results(games: list, num_games: int):
+    bust_counter = 0
+    max_counter = 0
+    final_bankrolls = [game[-1]["bankroll"] for game in games]
+
+    bust_counter = sum(
+        1 for final_bankroll in final_bankrolls if final_bankroll == 0)
+    max_counter = sum(
+        1 for final_bankroll in final_bankrolls if final_bankroll == default_bankroll * 3)
+    average_final_bankroll = np.mean(final_bankrolls)
+
+    bust_percentage = (bust_counter * 100) / num_games
+    max_percentage = (max_counter * 100) / num_games
+    file_path = generate_filepath("ai-behavior.txt")
+    # Writing results to a file
+    with open(file_path, "w") as f:
+        f.write(f"{bust_percentage}% of games where going bust\n")
+        f.write(f"{max_percentage}% of games achieved the maximum bankroll\n")
+        f.write(f"Average final bankroll: {average_final_bankroll}\n")
+
+
 if __name__ == "__main__":
     default_bankroll = 68000
-    default_num_games = 1 << 10
+    default_num_games = 1 << 16
 
     parser = argparse.ArgumentParser(
         description='Evaluate a machine learning model of Traitor Roulette.')
@@ -95,4 +117,5 @@ if __name__ == "__main__":
 
     games = play(model_path, args.bankroll, args.num_games)
 
+    print_results(games, args.num_games)
     plot_all_games(games)

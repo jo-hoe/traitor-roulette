@@ -1,10 +1,8 @@
 
-import os
 import argparse
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
 from tqdm import tqdm
 from src.common import generate_filepath
 from src.game.pocket import PocketType

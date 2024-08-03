@@ -3,11 +3,9 @@ import datetime
 import os
 
 from src.game.ml.train import train
-from src.game.ml.evaluate import evaluate
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Train and evaluate a machine learning model on Traitor Roulette.')
+        description='Train a machine learning model on Traitor Roulette.')
     parser.add_argument('--total_timesteps', dest='total_timesteps',
                         default=131072, type=int,
                         help='set the number of trained time steps, default is 131072')

@@ -1,10 +1,8 @@
-import math
 import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 import random
 
-from stable_baselines3 import SAC
 from src.game.pocket import PocketType
 from src.game.traitor_roulette_game import TraitorRouletteGame
 from stable_baselines3.common.env_util import make_vec_env

@@ -19,12 +19,20 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "ML play",
+            "name": "Train ML",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/machine_learning.py",
             "console": "integratedTerminal",
             "args": ["--total_timesteps", "1000"]
+        },
+        {
+            "name": "Evaluate ML",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/evaluate.py",
+            "console": "integratedTerminal",
+            "args": ["--model-name", "ppo_trained_model.zip"]
         }
     ]
 }

@@ -44,4 +44,5 @@ jupyter: ## starts a jupyter kernel in docker container
 	docker run --rm -p 8888:8888 \
 		-v ${ROOT_DIR}src:/home/jovyan/src \
 		-v ${ROOT_DIR}output:/home/jovyan/output \
-		quay.io/jupyter/pytorch-notebook:latest
+		quay.io/jupyter/pytorch-notebook:latest \
+		start-notebook.py --IdentityProvider.token=''

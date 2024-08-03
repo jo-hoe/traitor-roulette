@@ -50,28 +50,27 @@ def evaluate(model_path: str, initial_bankroll: int, num_episodes: int = 1 << 13
 
         games.append(game)
 
-    print(len(games))
+
+    plot_all_games(games)
+
+
 
 
 def plot_all_games(games: list):
-    all_rounds = np.array([])
-    all_bankrolls = np.array([])
-
+    # Visualization
+    # Plotting the bankroll over rounds
     for game in games:
-        rounds = np.array([x["round"] for x in game])
-        bankrolls = np.array([x["bankroll"] for x in game])
+        rounds = [entry["round"] for entry in game]
+        bankrolls = [entry["bankroll"] for entry in game]
+        plt.plot(rounds, bankrolls)
 
-        all_rounds = np.concatenate((all_rounds, rounds))
-        all_bankrolls = np.concatenate((all_bankrolls, bankrolls))
-    # Plotting
-    plt.figure(figsize=(10, 5))
-    plt.plot(all_rounds, all_bankrolls, marker='o', linestyle='-', color='b')
-    plt.title("Bankroll Over Rounds")
-    plt.xlabel("Round")
-    plt.ylabel("Bankroll")
-    plt.grid()
+    plt.title('Bankroll Over Rounds for Multiple Episodes')
+    plt.xlabel('Round')
+    plt.ylabel('Bankroll')
+    plt.ylim(bottom=0)  # Assuming bankroll can't be negative
     plt.xticks(range(0, 4))  # Assuming max 3 rounds
     plt.xlim(0, 3)
+    plt.grid()
     plt.show()
 
 

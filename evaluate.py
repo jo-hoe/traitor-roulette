@@ -82,20 +82,32 @@ def plot_betsize(games: List[Dict]) -> None:
     rounds = [1, 2, 3]
     x = np.arange(len(rounds))
 
-    plt.bar(x, np_averages, yerr=np_std_devs, capsize=5,
-            color='lightblue', edgecolor='black')
-    plt.xticks(x, [f'Round {i}' for i in rounds])
-    plt.xlabel('Game Rounds')
-    plt.ylabel('Average Bet Size')
-    plt.title('Average Bet Size per Round with Standard Deviation')
-    plt.grid(axis='y')
+    fig, ax = plt.subplots(figsize=(10, 6))  # Increase figure size
 
-    for i in range(len(np_averages)):
-        plt.text(i, np_averages[i] + (0.05 * np.max(np_averages)),
-                 f'{np_averages[i]:.2f}', ha='center', va='baseline', fontsize=10)
+    # Define colors for each round
+    colors = ['#FF9999', '#66B2FF', '#99FF99']  # Light Red, Light Blue, Light Green
 
-    plt.savefig(generate_filepath("ai-betsize.png"), dpi=600)
+    # Create bars with different colors
+    bars = ax.bar(x, np_averages, yerr=np_std_devs, capsize=5,
+                  color=colors, edgecolor='black')
 
+    ax.set_xticks(x)
+    ax.set_xticklabels([f'Round {i}' for i in rounds])
+    ax.set_xlabel('Game Rounds')
+    ax.set_ylabel('Average Bet Size')
+    ax.set_title('Average Bet Size per Round with Standard Deviation')
+    ax.grid(axis='y')
+
+    # Create legend with average values
+    legend_labels = [f'Round {i+1}: {avg:.2f}' for i, avg in enumerate(np_averages)]
+    ax.legend(bars, legend_labels, title='Average Bet Sizes', loc='upper left', bbox_to_anchor=(1, 1))
+
+    # Adjust y-axis limit
+    ax.set_ylim(0, max(np_averages + np_std_devs) * 1.2)
+
+    plt.tight_layout()  # Adjust the layout
+    plt.savefig(generate_filepath("ai-betsize.png"), dpi=600, bbox_inches='tight')
+    plt.close() 
 
 def plot_all_games(games: list):
     # Visualization

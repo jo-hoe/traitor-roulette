@@ -54,7 +54,7 @@ def play(bankroll: int, iterations_count: int, step_size: float):
     return np.array(results)
 
 
-def print_results(results: np.ndarray, default_bankroll):
+def print_results(results: np.ndarray):
     run_with_best_avg = results[np.argmax(results[:, 1])]
 
     file_path = generate_filepath("bruteforce.txt")

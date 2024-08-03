@@ -8,9 +8,6 @@ from src.game.traitor_roulette_game import TraitorRouletteGame
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
-def create_environment(initial_bankroll : int) -> VecEnv:
-    return make_vec_env(lambda: TraitorRouletteEnv(initial_bankroll), n_envs=1)
-
 class TraitorRouletteEnv(gym.Env):
 
     def __init__(self, initial_bankroll : int):
@@ -64,3 +61,6 @@ class TraitorRouletteEnv(gym.Env):
             reward = -1 + (self.game.bankroll / self.game.initial_bankroll)
         
         return reward
+
+def create_environment(initial_bankroll : int) -> TraitorRouletteEnv:
+    return make_vec_env(lambda: TraitorRouletteEnv(initial_bankroll), n_envs=1)

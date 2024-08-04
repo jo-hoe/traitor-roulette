@@ -10,7 +10,7 @@ def test_reward():
     env.game._bankroll = initial_bankroll * 3
     assert env._get_reward() == 1, "reward should be 1"
     env.game._bankroll = env.game.initial_bankroll * 1.5
-    assert env._get_reward() == .5, "reward should be .5"
+    assert env._get_reward() == .25, "reward should be .25"
 
     # test 0
     env.game._bankroll = initial_bankroll

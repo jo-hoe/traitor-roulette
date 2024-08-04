@@ -8,29 +8,28 @@ from src.game.traitor_roulette_game import TraitorRouletteGame
 from stable_baselines3.common.env_util import make_vec_env
 
 
-def bankroll_to_reward(bankroll: int, initial_bankroll: int, max_bankroll: int) -> float:
+def bankroll_to_reward(bankroll: int, initial_bankroll: int = 68000, max_bankroll: int = 204000) -> float:
     reward = 0
     # reward winnings
-    if bankroll > initial_bankroll:
-        reward = bankroll / max_bankroll
+    if bankroll >= initial_bankroll:
+        reward = (bankroll - initial_bankroll) / \
+            (max_bankroll - initial_bankroll)
     # punish losses
-    elif bankroll < initial_bankroll:
+    else:
         reward = -1 + (bankroll / initial_bankroll)
 
     return reward
 
 
-def reward_to_bankroll(reward: float, initial_bankroll: int, max_bankroll: int) -> int:
-    if reward == 0:
-        bankroll = initial_bankroll
-    # reward is positive (or zero), meaning bankroll >= initial_bankroll
-    elif reward > 0:
-        bankroll = reward * max_bankroll
-    # reward is negative, meaning bankroll < initial_bankroll
+def reward_to_bankroll(reward: float, initial_bankroll: int = 68000, max_bankroll: int = 204000) -> float:
+    # Check which case to apply
+    if reward >= 0:
+        bankroll = reward * \
+            (max_bankroll - initial_bankroll) + initial_bankroll
     else:
         bankroll = (reward + 1) * initial_bankroll
 
-    return round(bankroll)
+    return bankroll
 
 
 class TraitorRouletteEnv(gym.Env):

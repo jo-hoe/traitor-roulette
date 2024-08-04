@@ -17,23 +17,32 @@
             "request": "launch",
             "program": "${workspaceFolder}/bruteforce.py",
             "console": "integratedTerminal",
-            "args": ["--iterations_count", "10000000"]
+            "args": [
+                "--games-count",
+                "10000000"
+            ]
         },
         {
             "name": "Train ML",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/machine_learning.py",
+            "program": "${workspaceFolder}/machine_learning_training.py",
             "console": "integratedTerminal",
-            "args": ["--total_timesteps", "1000"]
+            "args": [
+                "--total_timesteps",
+                "1000"
+            ]
         },
         {
             "name": "Evaluate ML",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/evaluate.py",
+            "program": "${workspaceFolder}/machine_learning_evaluate.py",
             "console": "integratedTerminal",
-            "args": ["--model-name", "ppo_trained_model.zip"]
+            "args": [
+                "--model-name",
+                "ppo_trained_model.zip"
+            ]
         }
     ]
 }

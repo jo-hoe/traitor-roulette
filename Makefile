@@ -38,3 +38,7 @@ bruteforce-simulation: ## bruteforces best static percentage strategy
 .PHONY: ml-train
 ml-train: ## train a model for traitors roulette of non exists and show results
 	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}machine_learning_training.py
+
+.PHONY: ml-evaluate
+ml-evaluate: ## evaluate the ml model provide the model name as such `make ml-evaluate name=<your_model_name>`
+	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}machine_learning_evaluate.py --model-name "$(name)"

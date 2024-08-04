@@ -55,7 +55,7 @@ def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
     plt.title('SAC Loss Functions')
     plt.legend()
 
-    plt.savefig(generate_filepath('sac_losses.png'))
+    plt.savefig(generate_filepath('ml_sac_losses.png'))
 
 
 def plot_rewards(initial_bankroll: int):
@@ -79,11 +79,11 @@ def plot_rewards(initial_bankroll: int):
                 label='Initial Pot size Level')  # Marker for initial bankroll
     plt.legend()
     plt.grid()
-    plt.savefig(generate_filepath("training_reward_function.png"), dpi=600)
+    plt.savefig(generate_filepath("ml_reward.png"), dpi=600)
 
 
 if __name__ == "__main__":
-    default_total_timesteps = 1 << 15
+    default_total_timesteps = 1 << 16
     default_bankroll = 68000
 
     parser = argparse.ArgumentParser(
@@ -98,5 +98,5 @@ if __name__ == "__main__":
 
     plot_rewards(args.bankroll)
 
-    train(generate_filepath("ppo_trained_model.zip"), initial_bankroll=args.bankroll,
+    train(generate_filepath("ml_model.zip"), initial_bankroll=args.bankroll,
           total_timesteps=args.total_timesteps)

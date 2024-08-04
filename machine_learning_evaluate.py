@@ -85,29 +85,34 @@ def plot_betsize(games: List[Dict]) -> None:
     fig, ax = plt.subplots(figsize=(10, 6))  # Increase figure size
 
     # Define colors for each round
-    colors = ['#FF9999', '#66B2FF', '#99FF99']  # Light Red, Light Blue, Light Green
+    # Light Red, Light Blue, Light Green
+    colors = ['#FF9999', '#66B2FF', '#99FF99']
 
     # Create bars with different colors
     bars = ax.bar(x, np_averages, yerr=np_std_devs, capsize=5,
                   color=colors, edgecolor='black')
 
     ax.set_xticks(x)
-    ax.set_xticklabels([f'Round {i}' for i in rounds])
+    ax.set_xticklabels([f'Round {i} standard deviation' for i in rounds])
     ax.set_xlabel('Game Rounds')
     ax.set_ylabel('Average Bet Size')
     ax.set_title('Average Bet Size per Round with Standard Deviation')
     ax.grid(axis='y')
 
     # Create legend with average values
-    legend_labels = [f'Round {i+1}: {avg:.2f}' for i, avg in enumerate(np_averages)]
-    ax.legend(bars, legend_labels, title='Average Bet Sizes', loc='upper left', bbox_to_anchor=(1, 1))
+    legend_labels = [f'Round {i+1}: {avg:.2f}' for i,
+                     avg in enumerate(np_averages)]
+    ax.legend(bars, legend_labels, title='Average Bet Sizes',
+              loc='upper left', bbox_to_anchor=(1, 1))
 
     # Adjust y-axis limit
     ax.set_ylim(0, max(np_averages + np_std_devs) * 1.2)
 
     plt.tight_layout()  # Adjust the layout
-    plt.savefig(generate_filepath("ai-betsize.png"), dpi=600, bbox_inches='tight')
-    plt.close() 
+    plt.savefig(generate_filepath("ml_betsize.png"),
+                dpi=600, bbox_inches='tight')
+    plt.close()
+
 
 def plot_all_games(games: list):
     # Visualization
@@ -117,15 +122,15 @@ def plot_all_games(games: list):
         bankrolls = [entry["bankroll"] for entry in game]
         plt.plot(rounds, bankrolls)
 
-    plt.title('Bankroll Over Rounds for Multiple Episodes')
+    plt.title('Pot Size Over Rounds for Multiple Games')
     plt.xlabel('Round')
-    plt.ylabel('Bankroll')
+    plt.ylabel('Pot Size')
     plt.ylim(bottom=0)  # Assuming bankroll can't be negative
     plt.xticks(range(0, 4))  # Assuming max 3 rounds
     plt.xlim(0, 3)
     plt.grid()
 
-    plt.savefig(generate_filepath("ai-behavior.png"), dpi=600)
+    plt.savefig(generate_filepath("ml_behavior.png"), dpi=600)
 
 
 def print_results(games: list, num_games: int, default_bankroll: int):
@@ -144,7 +149,7 @@ def print_results(games: list, num_games: int, default_bankroll: int):
     max_percentage = (max_counter * 100) / num_games
     avg_bet_size_first_round = np.mean(bet_sizes_first_round)
 
-    file_path = generate_filepath("ai-behavior.txt")
+    file_path = generate_filepath("ml_behavior.txt")
     # Writing results to a file
     with open(file_path, "w") as f:
         f.write(f"{bust_percentage}% of games where going bust\n")

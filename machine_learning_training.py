@@ -81,7 +81,7 @@ def plot_losses(losses: list):
     plt.savefig(generate_filepath('ml_sac_losses.png'))
 
 
-def plot_rewards(initial_bankroll: int):
+def plot_reward_function(initial_bankroll: int):
     # Generate bankroll values from 0 to 204000
     bankroll_values = np.linspace(0, 204000, 500)
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                         help=f'set your initial bankroll should be a multiple of 2000, default is {default_bankroll}')
     args = parser.parse_args()
 
-    plot_rewards(args.bankroll)
+    plot_reward_function(args.bankroll)
 
     train(generate_filepath("ml_model.zip"), initial_bankroll=args.bankroll,
           total_timesteps=args.total_timesteps)

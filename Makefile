@@ -35,14 +35,6 @@ play: ## play a game of traitors roulette
 bruteforce-simulation: ## bruteforces best static percentage strategy
 	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}bruteforce.py
 
-.PHONY: ml-play
-ml-play: ## train a model for traitors roulette of non exists and show results
+.PHONY: ml-train
+ml-train: ## train a model for traitors roulette of non exists and show results
 	${ROOT_DIR}.venv/Scripts/python ${ROOT_DIR}machine_learning.py
-
-.PHONY: jupyter
-jupyter: ## starts a jupyter kernel in docker container
-	docker run --rm -p 8888:8888 \
-		-v ${ROOT_DIR}src:/home/jovyan/src \
-		-v ${ROOT_DIR}output:/home/jovyan/output \
-		quay.io/jupyter/pytorch-notebook:latest \
-		start-notebook.py --IdentityProvider.token=''

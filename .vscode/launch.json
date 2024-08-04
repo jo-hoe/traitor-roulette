@@ -17,7 +17,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/bruteforce.py",
             "console": "integratedTerminal",
-            "args": ["--iterations_count", "100"]
+            "args": ["--iterations_count", "10000000"]
         },
         {
             "name": "Train ML",

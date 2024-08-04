@@ -29,24 +29,24 @@ class Run():
         self.final_bankrolls.append(bankroll)
 
 
-def play(bankroll: int, iterations_count: int, step_size: float):
+def play(bankroll: int, games_count: int):
+    step_size = 0.01
     results = []
 
     game = TraitorRouletteGame(bankroll)
-    run_count = 100/step_size
-    for i in tqdm(range(1, int(run_count) + 1)):
-        run = Run(round(i/run_count * 100, 6))
+    games_per_run = games_count / (100 / step_size)
+    for i in tqdm(range(1, round((games_count / games_per_run) + 1))):
+        run = Run(step_size * i)
 
-        for _ in range(iterations_count):
-            if game.has_game_ended():
-                run.add_final_bankroll(game.bankroll)
-                game.reset()
-                continue
+        for _ in range(round(games_per_run)):
+            game.reset()
+            while not game.has_game_ended():
+                bet_size = game.get_valid_bet_size(run.bet_percentage)
 
-            bet_size = game.get_valid_bet_size(run.bet_percentage)
-
-            game.play(bet_size, random.choice(
-                [PocketType.RED, PocketType.BLACK]))
+                game.play(bet_size, random.choice(
+                    [PocketType.RED, PocketType.BLACK]))
+            
+            run.add_final_bankroll(game.bankroll)
 
         results.append([run.bet_percentage, run.avg(), run.min(), run.max()])
 
@@ -95,19 +95,16 @@ def plot_results(results: np.ndarray):
 
 if __name__ == "__main__":
     default_bankroll = 68000
-    default_iterations_count = 1 << 17
+    default_games_count = 1 << 28
     default_step_size = .01
 
     wheel = RouletteWheel()
 
     parser = argparse.ArgumentParser(
         description='Lets bruteforce Traitor Roulette.')
-    parser.add_argument('--iterations_count', dest='iterations_count',
-                        default=default_iterations_count, type=int,
-                        help=f'set the number of iterations per valid betting size, default is {default_iterations_count}')
-    parser.add_argument('--step_size', dest='step_size',
-                        default=default_step_size, type=float,
-                        help=f'step size for the betting percentage, default is {default_step_size}')
+    parser.add_argument('--games-count', dest='games_count',
+                        default=default_games_count, type=int,
+                        help=f'set the number of games to simulate, default is {default_games_count}')
     parser.add_argument('--bankroll', dest='bankroll',
                         default=default_bankroll, type=int,
                         help=f'set your initial bankroll should be a multiple of 2000, default is {default_bankroll}')
@@ -115,10 +112,8 @@ if __name__ == "__main__":
 
     if args.bankroll % 2000 != 0:
         raise ValueError("Bankroll should be a multiple of 2000")
-    if args.step_size < .000001:
-        raise ValueError("Cannot run with step size less than .000001")
 
-    results = play(args.bankroll, args.iterations_count, args.step_size)
+    results = play(args.bankroll, args.games_count)
 
-    print_results(results, args.bankroll)
+    print_results(results)
     plot_results(results)

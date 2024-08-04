@@ -44,15 +44,38 @@ def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
 
     model.save(model_file_path)
 
-    # Plot loss function
-    steps, critic_losses, actor_losses = zip(*callback.losses)
+    plot_losses(callback.losses)
+
+
+def moving_average(data, window_size):
+    """Calculate the moving average of a given data list."""
+    return np.convolve(data, np.ones(window_size)/window_size, mode='valid')
+
+
+def plot_losses(losses: list):
+    window_size = 32
+    steps, critic_losses, actor_losses = zip(*losses)
+
+    critic_avg = moving_average(critic_losses, window_size)
+    actor_avg = moving_average(actor_losses, window_size)
+
+    # Adjust steps for moving average
+    # Align steps with the moving average length
+    steps_avg = steps[window_size - 1:]
 
     plt.figure(figsize=(12, 10))
-    plt.plot(steps, critic_losses, 'r-', label='Critic Loss')
-    plt.plot(steps, actor_losses, 'b-', label='Actor Loss')
+
+    plt.plot(steps, critic_losses, 'r-', label='Critic Loss', alpha=0.25)
+    plt.plot(steps, actor_losses, 'b-', label='Actor Loss', alpha=0.25)
+
+    plt.plot(steps_avg, critic_avg, 'r--',
+             label='Critic Loss Average', linewidth=2)
+    plt.plot(steps_avg, actor_avg, 'b--',
+             label='Actor Loss Average', linewidth=2)
+
     plt.xlabel('Steps')
     plt.ylabel('Loss')
-    plt.title('SAC Loss Functions')
+    plt.title('SAC Loss Functions with Moving Averages')
     plt.legend()
 
     plt.savefig(generate_filepath('ml_sac_losses.png'))
@@ -69,14 +92,14 @@ def plot_rewards(initial_bankroll: int):
     # Create the plot
     plt.figure(figsize=(10, 6))
     plt.plot(reward_values, bankroll_values,
-             label='Reward vs Pot size', color='blue')
-    plt.title('Pot size to Reward Mapping')
+             label='Reward vs Pot Size', color='blue')
+    plt.title('Pot Size to Reward Mapping')
     plt.xlabel('Rewards')
     plt.ylabel('Pot size')
     plt.axvline(x=0, color='grey', linestyle='--',
                 linewidth=0.7)  # Add a vertical line for y=0
     plt.axhline(y=initial_bankroll, color='green', linestyle='--', linewidth=0.7,
-                label='Initial Pot size Level')  # Marker for initial bankroll
+                label='Initial Pot Size Level')  # Marker for initial bankroll
     plt.legend()
     plt.grid()
     plt.savefig(generate_filepath("ml_reward.png"), dpi=600)

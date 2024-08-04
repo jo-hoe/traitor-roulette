@@ -30,7 +30,7 @@
             "console": "integratedTerminal",
             "args": [
                 "--total_timesteps",
-                "1000"
+                "1024"
             ]
         },
         {

@@ -25,11 +25,6 @@ class BetPercentageCallback(BaseCallback):
 
         return super()._on_step()
 
-    def _get_final_observations_before_reset(self):
-        for env_idx in range(self.model.n_envs):
-            # Get the terminal observation of the just finished trajectory
-            yield self.locals["infos"][env_idx].get("terminal_observation")
-
 
 def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
     env = create_environment(initial_bankroll)

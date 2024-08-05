@@ -40,6 +40,7 @@ def train(model_file_path: str, initial_bankroll: int, total_timesteps: int):
     model.save(model_file_path)
 
     plot_losses(callback.losses)
+    plot_actor_losses(callback.losses)
 
 
 def moving_average(data, window_size):
@@ -75,6 +76,31 @@ def plot_losses(losses: list):
 
     plt.savefig(generate_filepath('ml_sac_losses.png'))
 
+def plot_actor_losses(losses: list):
+    window_size = 32
+    steps, _, actor_losses = zip(*losses)
+
+    actor_avg = moving_average(actor_losses, window_size)
+
+    # Adjust steps for moving average
+    # Align steps with the moving average length
+    steps_avg = steps[window_size - 1:]
+
+    plt.figure(figsize=(12, 10))
+
+    plt.plot(steps, actor_losses, 'b-', label='Actor Loss', alpha=0.25)
+
+    plt.plot(steps_avg, actor_avg, 'b--',
+             label='Actor Loss Average', linewidth=2)
+
+    plt.xlabel('Steps')
+    plt.ylabel('Loss')
+    plt.title('SAC Loss Functions with Moving Averages')
+    plt.legend()
+
+    plt.savefig(generate_filepath('ml_actor_losses.png'))
+
+
 
 def plot_reward_function(initial_bankroll: int):
     # Generate bankroll values from 0 to 204000
@@ -101,7 +127,7 @@ def plot_reward_function(initial_bankroll: int):
 
 
 if __name__ == "__main__":
-    default_total_timesteps = 1 << 16
+    default_total_timesteps = 1 << 18
     default_bankroll = 68000
 
     parser = argparse.ArgumentParser(

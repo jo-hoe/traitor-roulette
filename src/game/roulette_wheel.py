@@ -1,9 +1,17 @@
+from abc import ABC, abstractmethod
 import copy
 import random
 from typing import List
 from src.game.pocket import Pocket, PocketType
 
-class RouletteWheel():
+class RouletteWheel(ABC):
+
+    @abstractmethod
+    def spin(self) -> Pocket:
+        pass
+
+
+class TraitorRouletteWheel(RouletteWheel):
 
     _wheel = []
 

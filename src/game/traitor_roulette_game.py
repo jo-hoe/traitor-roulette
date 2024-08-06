@@ -2,7 +2,7 @@
 
 from typing import Tuple
 from src.game.pocket import PocketType, Pocket
-from src.game.roulette_wheel import RouletteWheel, TraitorRouletteWheel
+from src.game.roulette_wheels import RouletteWheel, TraitorRouletteWheel
 
 MAX_ROUNDS = 3
 MAX_MULTIPLIER = 3

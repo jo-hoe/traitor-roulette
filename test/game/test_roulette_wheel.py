@@ -1,5 +1,5 @@
 from src.game.pocket import Pocket, PocketType
-from src.game.roulette_wheel import RouletteWheel, TraitorRouletteWheel
+from src.game.roulette_wheels import RiggedWheel, RouletteWheel, TraitorRouletteWheel
 
 
 def test_generate_wheel():
@@ -43,3 +43,10 @@ def count_pocket_types(wheel: RouletteWheel, pocket_type: PocketType):
         if pocket.type == pocket_type:
             result += 1
     return result
+
+def test_rigged_wheel_spin():
+    wheel = RiggedWheel([Pocket(1, PocketType.RED), Pocket(2, PocketType.BLACK)])
+
+    assert wheel.spin() == Pocket(1, PocketType.RED)
+    assert wheel.spin() == Pocket(2, PocketType.BLACK)
+    assert wheel.spin() == Pocket(1, PocketType.RED)

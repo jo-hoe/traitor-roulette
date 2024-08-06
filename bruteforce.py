@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from src.common import generate_filepath
 from src.game.pocket import PocketType
-from src.game.roulette_wheel import RouletteWheel
+from src.game.roulette_wheels import RouletteWheel
 from src.game.traitor_roulette_game import TraitorRouletteGame
 
 

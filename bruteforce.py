@@ -35,6 +35,8 @@ def play(bankroll: int, games_count: int):
 
     game = TraitorRouletteGame(bankroll)
     games_per_run = games_count / (100 / step_size)
+    
+    # due to rounding you may not exactly land on the number of desired games
     for i in tqdm(range(1, round((games_count / games_per_run) + 1))):
         run = Run(step_size * i)
 

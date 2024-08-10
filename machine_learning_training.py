@@ -113,14 +113,14 @@ def plot_reward_function(initial_bankroll: int):
     # Create the plot
     plt.figure(figsize=(10, 6))
     plt.plot(reward_values, bankroll_values,
-             label='Reward vs Pot Size', color='blue')
-    plt.title('Pot Size to Reward Mapping')
+             label='Reward vs Stack Size', color='blue')
+    plt.title('Stack Size to Reward Mapping')
     plt.xlabel('Rewards')
-    plt.ylabel('Pot size')
+    plt.ylabel('Stack Size')
     plt.axvline(x=0, color='grey', linestyle='--',
                 linewidth=0.7)  # Add a vertical line for y=0
     plt.axhline(y=initial_bankroll, color='green', linestyle='--', linewidth=0.7,
-                label='Initial Pot Size Level')  # Marker for initial bankroll
+                label='Initial Stack Size Level')  # Marker for initial bankroll
     plt.legend()
     plt.grid()
     plt.savefig(generate_filepath("ml_reward.png"), dpi=600)

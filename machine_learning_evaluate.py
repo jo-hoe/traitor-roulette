@@ -93,7 +93,7 @@ def plot_betsize(games: List[Dict]) -> None:
                   color=colors, edgecolor='black')
 
     ax.set_xticks(x)
-    ax.set_xticklabels([f'Round {i} standard deviation' for i in rounds])
+    ax.set_xticklabels([f'Round {i}' for i in rounds])
     ax.set_xlabel('Game Rounds')
     ax.set_ylabel('Average Bet Size')
     ax.set_title('Average Bet Size per Round with Standard Deviation')
@@ -122,9 +122,9 @@ def plot_all_games(games: list):
         bankrolls = [entry["bankroll"] for entry in game]
         plt.plot(rounds, bankrolls)
 
-    plt.title('Pot Size Over Rounds for Multiple Games')
-    plt.xlabel('Round')
-    plt.ylabel('Pot Size')
+    plt.title('Stack Size Over Game Rounds')
+    plt.xlabel('Round #')
+    plt.ylabel('Stack Size')
     plt.ylim(bottom=0)  # Assuming bankroll can't be negative
     plt.xticks(range(0, 4))  # Assuming max 3 rounds
     plt.xlim(0, 3)
@@ -161,7 +161,7 @@ def print_results(games: list, num_games: int, default_bankroll: int):
 
 if __name__ == "__main__":
     default_bankroll = 68000
-    default_num_games = 1 << 16
+    default_num_games = 1 << 18
     default_model_name = "ppo_trained_model.zip"
 
     parser = argparse.ArgumentParser(

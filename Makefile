@@ -14,14 +14,18 @@ venv:
 
 .PHONY: update
 update: git-pull ## pulls git repo and installs all dependencies
-	${ROOT_DIR}.venv/Scripts/pip install -r ${ROOT_DIR}requirements.txt
+	${ROOT_DIR}.venv/Scripts/python -m pip install -r ${ROOT_DIR}requirements.txt
 
 .PHONY: setup-python
 setup-python: venv update ## init setup of project after checkout
 
 .PHONY: save-dependencies
 save-dependencies: ## save current dependencies
-	${ROOT_DIR}.venv/Scripts/pip freeze > ${ROOT_DIR}requirements.txt
+	ifeq ($(DETECT_OS),Windows)
+		${ROOT_DIR}.venv/Scripts/pip list --not-required --format=freeze | findstr /v "pip setuptools wheel" > ${ROOT_DIR}requirements.txt
+	else
+		${ROOT_DIR}.venv/Scripts/pip list --not-required --format=freeze | grep -v "pip\|setuptools\|wheel" > ${ROOT_DIR}requirements.txt
+	endif
 
 .PHONY: test
 test: ## runs all tests

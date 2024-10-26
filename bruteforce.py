@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from src.common import generate_filepath
 from src.game.pocket import PocketType
-from src.game.roulette_wheels import RouletteWheel
+from src.game.roulette_wheels import TraitorRouletteWheel
 from src.game.traitor_roulette_game import TraitorRouletteGame
 
 
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     default_games_count = 1 << 28
     default_step_size = .01
 
-    wheel = RouletteWheel()
+    wheel = TraitorRouletteWheel()
 
     parser = argparse.ArgumentParser(
         description='Lets bruteforce Traitor Roulette.')

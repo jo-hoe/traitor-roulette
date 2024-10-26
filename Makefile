@@ -20,7 +20,7 @@ update: git-pull ## pulls git repo and installs all dependencies
 setup-python: venv update ## init setup of project after checkout
 
 .PHONY: save-dependencies
-save-dependencies: ## save current dependencies
+save-dependencies:
 	"${ROOT_DIR}.venv/Scripts/pip" list --not-required --format=freeze | grep -v "pip" > ${ROOT_DIR}requirements.txt
 
 .PHONY: test

@@ -21,11 +21,7 @@ setup-python: venv update ## init setup of project after checkout
 
 .PHONY: save-dependencies
 save-dependencies: ## save current dependencies
-	ifeq ($(DETECT_OS),Windows)
-		${ROOT_DIR}.venv/Scripts/pip list --not-required --format=freeze | findstr /v "pip setuptools wheel" > ${ROOT_DIR}requirements.txt
-	else
-		${ROOT_DIR}.venv/Scripts/pip list --not-required --format=freeze | grep -v "pip\|setuptools\|wheel" > ${ROOT_DIR}requirements.txt
-	endif
+	"${ROOT_DIR}.venv/Scripts/pip" list --not-required --format=freeze | grep -v "pip" > ${ROOT_DIR}requirements.txt
 
 .PHONY: test
 test: ## runs all tests

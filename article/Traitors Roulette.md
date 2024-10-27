@@ -71,6 +71,7 @@ In the first round, they decided to bet $12,000 on black from their stake of $68
 | Round | Stake Before Round | Bet     | Winnings | Stake After Round |
 | ----- | ------------------ | ------- | -------- | ----------------- |
 | I     | $68,000            | $12,000 | $24,000  | $80,000           |
+
 The stake after the round is always calculated as follows:
 
 > Stack Before Round - Bet + Winnings
@@ -229,7 +230,7 @@ As you can see, the function is skewed and punishes losses more harshly. I decid
 
 ![ml_sac_losses_20240805_1149](resources/ml_sac_losses_20240805_1149.png)
 
-#### Evaluations
+#### Evaluation
 
 After training my model, I let the AI play 2^18 games (262,144) and checked the results. Here are some key performance indicators (KPIs).
 

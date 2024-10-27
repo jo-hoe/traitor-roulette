@@ -1,6 +1,6 @@
 # Gameshow Roulette - Human vs. Machine
 
-![roulette](resources/roulette.png)
+![roulette](resources/intro.jpg)
 
 In the reality TV show (yeah, I know, don't comment on that please), the _[The Traitors Australia](https://w.wiki/9NDo)_ Season 1 Episode 6_, contestants were faced with a gambling game. In this article, we will see how they did and attacked the problem differently via maths, with programming solutions, and even delve into deep-learning and LLM solutions. Finally, we pin them against each other at the end. Who will have the better strategy?
 
@@ -17,6 +17,8 @@ In front of them is a roulette wheel marked with the typical red and black pocke
 ![diagram](resources/diagram.png)
 
 ### The Rules
+
+![roulette](resources/roulette.png)
 
 First, the constants have 68,000 Australian dollars at their disposal. We will call their total amount of money their __stake__.
 

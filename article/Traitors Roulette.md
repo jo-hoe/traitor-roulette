@@ -187,6 +187,7 @@ The chart shows that the average resembles a step function, and the actual maxim
 | ----- | ------------------ | ------- | -------- | ----------------- | ----------------------------------- |
 | I     | $68,000            | $34,000 | $102,000 | $136,000          | here we hit the traitor tile        |
 | II    | $136,000           | $34,000 | $68,000  | $204,000          | here we guessed the color correctly |
+
 We can even bet less than 50% in the second round, as we can not win more than $204,000 anyway.
 
 With 49%, you must still play three games in this scenario. More games mean more chances to lose money, which lowers expected value and, in turn, our expected value.

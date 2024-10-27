@@ -2,7 +2,7 @@
 
 ![roulette](resources/roulette.png)
 
-In the reality TV show (yeah, I know, don't comment on that please), the [_The Traitors Australia](https://w.wiki/9NDo) Season 1 Episode 6_, contestants were faced with a gambling game. In this article, we will see how they did, what a mathematician, a programmer, and an AI might have done in their place, and pin them in the end against each other. Who will have the better strategy?
+In the reality TV show (yeah, I know, don't comment on that please), the _[The Traitors Australia](https://w.wiki/9NDo)_ Season 1 Episode 6_, contestants were faced with a gambling game. In this article, we will see how they did, what a mathematician, a programmer, and an AI might have done in their place, and pin them in the end against each other. Who will have the better strategy?
 
 By the way, all code developed for this article can be found on GitHub.
 
@@ -156,6 +156,7 @@ This requires us to hit the triple twice in a row to reach the theoretical maxim
 | ----- | ------------------ | ------- | -------- | ----------------- | ------------------------------------------------------------------- |
 | I     | $68,000            | $34,000 | $102,000 | $170,000          |                                                                     |
 | II    | $170,000           | $12,000 | $36,000  | $204,000          | we bet only $12,000 as we cannot win more than $204,000 in any case |
+
 With a bet size of $12,000, we would theoretically win $206,000, but due to our [constraint](#constraints), we can only ever win a maximum of $204,000.
 
 Let's also investigate the event we are very unlucky and every round is lost.

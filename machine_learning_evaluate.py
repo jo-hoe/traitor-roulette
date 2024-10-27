@@ -162,7 +162,7 @@ def print_results(games: list, num_games: int, default_bankroll: int):
 if __name__ == "__main__":
     default_bankroll = 68000
     default_num_games = 1 << 18
-    default_model_name = "ppo_trained_model.zip"
+    default_model_name = "trained_model.zip"
 
     parser = argparse.ArgumentParser(
         description='Evaluate a machine learning model of Traitor Roulette.')

@@ -192,11 +192,11 @@ We can even bet less than 50% in the second round, as we can not win more than $
 
 With 49%, you must still play three games in this scenario. More games mean more chances to lose money, which lowers expected value and, in turn, our expected value.
 
-| Round | Stake Before Round | Bet      | Winnings                              | Stake After Round |
-| ----- | ------------------ | -------- | ------------------------------------- | ----------------- |
-| I     | $68,000           | $32,000 | $96,000 <br>(hitting a traitor tile) | $132,000         |
-| II    | $132,000          | $64,000 | $128,000<br>(the correct color)      | $196,000         |
-| III   | $196,000           | $4,000   | $8,000                                | $204,000          |
+| Round | Stake Before Round | Bet      | Winnings                              | Stake After Round | Comment |
+| ----- | ------------------ | -------- | ------------------------------------- | ----------------- | ------- |
+| I     | $68,000           | $32,000 | $96,000 | $132,000         | here we hit a traitor tile |
+| II    | $132,000          | $64,000 | $128,000  | $196,000         | here we guess the correct color |
+| III   | $196,000           | $4,000   | $8,000                                | $204,000          | |
 
 Something similar is going on with the spike at ~98.6%. We will first bet the whole stack around that value during the initial round. This allows us to win the maximum amount in the game possible by hitting a T-tile and stopping instantly after the first round.
 

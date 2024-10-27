@@ -2,13 +2,11 @@
 
 ![roulette](resources/roulette.png)
 
-In the reality TV show (yeah, I know, don't comment on that please), the _[The Traitors Australia](https://w.wiki/9NDo)_ Season 1 Episode 6_, contestants were faced with a gambling game. In this article, we will see how they did, what a mathematician, a programmer, and an AI might have done in their place, and pin them in the end against each other. Who will have the better strategy?
-
-By the way, all code developed for this article can be found on GitHub.
+In the reality TV show (yeah, I know, don't comment on that please), the _[The Traitors Australia](https://w.wiki/9NDo)_ Season 1 Episode 6_, contestants were faced with a gambling game. In this article, we will see how they did and attacked the problem differently via maths, with programming solutions, and even delve into deep-learning and LLM solutions. Finally, we pin them against each other at the end. Who will have the better strategy?
 
 ## The Setup
 
-An electrician, a [former hostage](https://en.wikipedia.org/wiki/Nigel_Brennan), and a legal professional walk into a room. It sounds like the setup for a terrible joke, but in this case, it marks the start of a scene in a gameshow episode. These three people will gamble money from a shared account. They are super excited about the whole thing, as you might gather from their faces.
+An electrician, a legal professional, and a [former hostage](https://en.wikipedia.org/wiki/Nigel_Brennan) walk into a room. It sounds like the setup for a terrible joke, but in this case, it marks the start of a scene in a gameshow episode. These three people will gamble money from a shared account, which they or their peers can win at the end of the game. They are super excited about the whole thing, as you might gather from their faces.
 
 ![game_begins](resources/game_begins.png)
 
@@ -106,7 +104,7 @@ What would you have done in their shoes? What policy would you have adopted? Let
 
 ### Expected Value
 
-To get to the bottom of this, let's try some good old math (or skip this and the next section if you don't feel mathsy today). We have 12 red, 12 black, 12 traitor tiles, and one _0_ tile. With this, we can calculate the expected value for a given spin on the wheel. The expected value is the average of all possible outcomes. In this case, we can calculate it by multiplying the probability of each outcome by the value of that outcome. Here is the calculation for each outcome:
+To get to the bottom of this, let's try some good old math (or skip this and continue with the next section if you don't feel mathsy today). We have 12 red, 12 black, 12 traitor tiles, and one _0_ tile. With this, we can calculate the expected value for a given spin on the wheel. The expected value is the average of all possible outcomes. In this case, we can calculate it by multiplying the probability of each outcome by the value of that outcome. Here is the calculation for each outcome:
 
 - Win 2x: 𝑝(correct color, not T) = 12/37 ≈ 32,43%
 - Win 3x: 𝑝(T) = 12/37 ≈ 32,43%
@@ -124,9 +122,9 @@ Since there are 12 red and 12 black pockets, it's safe to assume their choice of
 
 Bankroll Management helps maximize expected value while managing the risk of going bust and losing everything. In games where you lose your entire bet size, we can calculate an optimal betting strategy, for instance, by using the [Kelly criterion](https://en.wikipedia.org/wiki/Kelly_criterion). The formula is below:
 
-𝑓 = 𝑝 - (𝑞/𝑏)
+> 𝑓 = 𝑝 - (𝑞/𝑏)
 
-where:
+The variables are described as follows:
 
 - 𝑓 is the fraction of the total stack the candidates should bet
 - 𝑝 is the probability of a win
@@ -135,18 +133,19 @@ where:
 
 You win when either picking a correct color or landing on the traitor tile. Since we have 12 tiles with individual colors and 12 traitor tiles, our 𝑝 is:
 
-𝑝 = 24/37
+> 𝑝 = 24/37
 
 𝑞 is just 1 minus p.
-𝑞 = 1 - 𝑝 = 1-(24/37)
+
+> 𝑞 = 1 - 𝑝 = 1-(24/37)
 
 𝑏 varies depending on whether the candidates predict the color correctly, gaining them 2x of their bet. If they manage to hit a T, they triple their value.  Therefore, 𝑏 can be calculated as follows:
 
-𝑏 = ((12 *2) + (12* 3)) / 24 = 2.5
+> 𝑏 = ((12 *2) + (12* 3)) / 24 = 2.5
 
 Plugin in all the numbers leaves us with the following:
 
-𝑓 = (24/37) - ( ( 1 - (24/37) ) / 2.5 ) = ~0.5081....
+> 𝑓 = (24/37) - ( ( 1 - (24/37) ) / 2.5 ) = ~0.5081....
 
 Using the Kelly criterion, the candidates should bet $34,550.80 from their initial stack of $68,000 to maximize their winnings while keeping an eye on their total bankroll. Considering [constraint](#constraints) _3._ let's round down to $34,000. In subsequent rounds, they should stick to the policy of betting ~50% or roughly 1/2 of their stack size.
 
@@ -189,7 +188,7 @@ The chart shows that the average resembles a step function, and the actual maxim
 | I     | $68,000            | $34,000 | $102,000 | $136,000          | here we hit the traitor tile        |
 | II    | $136,000           | $34,000 | $68,000  | $204,000          | here we guessed the color correctly |
 
-We can even bet less than 50% in the second round, as we can not win more than $204,000 anyway.
+We can bet less than 50% in the second round, as we can only win up to $204,000 anyway.
 
 With 49%, you must still play three games in this scenario. More games mean more chances to lose money, which lowers expected value and, in turn, our expected value.
 
@@ -255,7 +254,9 @@ This admittedly cluttered graph shows how the AI was betting for each round and 
 
 ### The Lazy Person-AI-Solution
 
-Finally, we throw the problem statement into an LLM and see what it spits out. I picked Claude (3.5 Sonnet, Oct 2024) because it is currently the best (in my personal opinion). I described the game and restrictions to the LLM and gave it a go. Claude, similar to me, started to waffle on about maths and the best and worst outcomes but finally spit out a conclusion, which I just copied and pasted below.
+Finally, we throw the problem statement into an LLM and see what it spits out. I picked Claude (3.5 Sonnet, Oct 2024) because it is currently the best (in my personal opinion). I described the game and restrictions to the LLM and stated the initial question:
+
+> What is the best strategy to win some of that sweet price money?
 
 ```markdown
 The mathematically optimal strategy is to bet the maximum amount ($68,000) in the first round, 
@@ -268,7 +269,7 @@ Basically, the LLM is going with the expected value, which we also discovered in
 
 ## The Competition
 
-Let's now pin all of these solutions against each other. And if you want, you can also come up with your policy and check how it would fare against other strategies. I will acknowledge that this way of "n=1-evaluation" is not very scientific as we only take one snapshot. In addition, the different approaches had different goals. For instance, the Kelly Criterion and the search for the best-expected value had different objectives in mind. Not to mention the screwed reward function we used. So we could reasonably argue that these policies are not directly comparable. But after all that theory we discussed, let's have fun with an example. We take the strategies from above, assume we encountered the same wins and losses as the contestants, and see who would win in that single scenario.
+Let's now pin all of these solutions against each other. And if you want, you can also come up with your policy and check how it would fare against other strategies. I will acknowledge that this way of "n=1-evaluation" is not very scientific. In addition, the different approaches had different goals. For instance, the Kelly Criterion and the search for the best-expected value had different objectives in mind. Not to mention the screwed reward function we used or the implicit bias I brought into the mix by my choice of words in the prompt for the LLM. All in all, we could reasonably argue that these policies are not directly comparable. But after all that theory we discussed, let's have fun with an example. We take the strategies from above, assume we encountered the same wins and losses as the contestants, and see who would win in that scenario.
 
 ### The Humans
 

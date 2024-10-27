@@ -119,7 +119,7 @@ This means you are expected to win an average of $1.27 for each dollar you bet. 
 
 Since there are 12 red and 12 black pockets, it's safe to assume their choice of black or red does not matter. All the candidates can influence is how much they bet. Therefore, the most important decision comes mainly down to their back-roll management.
 
-#### The Amateur Mathematicians Solution
+#### The Amateur Mathematician's Solution
 
 Bankroll Management helps maximize expected value while managing the risk of going bust and losing everything. In games where you lose your entire bet size, we can calculate an optimal betting strategy, for instance, by using the [Kelly criterion](https://en.wikipedia.org/wiki/Kelly_criterion). The formula is below:
 

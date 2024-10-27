@@ -307,7 +307,9 @@ This solution wins it all in the end.
 | I     | $68,000            | $40,000 | $80,000  | $108,000          |
 | II    | $108,000           | $40,000 | $0       | $68,000           |
 | III   | $68,000            | $58,000 | $184,000 | $194,000          |
+
 The AI starts out with its standard bet of $40,000, wins the first round, and loses the second. By then, it went with a sizeable bet and closed the 3rd round with a profit.
+
 ### Overview
 
 Below are our final scores.

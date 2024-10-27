@@ -327,4 +327,4 @@ Below are our final scores.
 
 There we have it. The solution that takes the best expected value into account is the winner of our example.
 
-I do not doubt that there are better or more nuanced solutions, but for now, I have already spent quite some time and effort on this short little project, so I will leave it here. But I have all my code in [GitHub](https://github.com/jo-hoe/traitor-roulette) for you to check out and play with if you want to give it a go.
+I do not doubt that there are better or more nuanced solutions, but for now, I have already spent quite some time and effort on this short little project, so I will leave it here. I have all my code on [GitHub](https://github.com/jo-hoe/traitor-roulette) for you to check out and play with if you want to give it a go.

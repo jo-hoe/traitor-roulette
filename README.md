@@ -13,7 +13,6 @@ If you run on Windows, you can directly install it from [gnuwin32](https://gnuwi
 winget install GnuWin32.Make
 ```
 
-You will also need Docker and Python.
 Run `make init` to install all dependencies in a virtual Python environment.
 
 ### How to Use

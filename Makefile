@@ -4,6 +4,9 @@ include help.mk
 
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
+.PHONY: init
+init: venv update
+
 .PHONY: git-pull
 git-pull:
 	@git pull

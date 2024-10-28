@@ -31,8 +31,8 @@ Nobody explicitly mentioned what happens when the ball lands on the green _0_ ti
 
 | Guess from constants | Ball landed on red 🔴 | Ball landed on black ⚫ | Ball landed on T | Ball landed on green 🟢 |
 | -------------------- | --------------------- | ---------------------- | ---------------- | ----------------------- |
-| black pocket 🔴      | lose bet              | win bet x2             | win bet x3       | lose bet                |
-| red pocket ⚫         | win bet x2            | lose bet               | win bet x3       | lose bet                |
+| black pocket ⚫      | lose bet              | win bet x2             | win bet x3       | lose bet                |
+| red pocket 🔴         | win bet x2            | lose bet               | win bet x3       | lose bet                |
 
 #### Constraints
 
@@ -74,7 +74,7 @@ In the first round, they decided to bet $12,000 on black from their stake of $68
 
 The stake after the round is always calculated as follows:
 
-> Stack Before Round - Bet + Winnings
+> Stake Before Round - Bet + Winnings
 
 or
 
@@ -128,7 +128,7 @@ Bankroll Management helps maximize expected value while managing the risk of goi
 
 The variables are described as follows:
 
-- 𝑓 is the fraction of the total stack the candidates should bet
+- 𝑓 is the fraction of the total stake the candidates should bet
 - 𝑝 is the probability of a win
 - 𝑞 is the probability of a loss
 - 𝑏 is the proportion of the bet the candidates can win
@@ -149,10 +149,10 @@ Plugin in all the numbers leaves us with the following:
 
 > 𝑓 = (24/37) - ( ( 1 - (24/37) ) / 2.5 ) = ~0.5081....
 
-Using the Kelly criterion, the candidates should bet $34,550.80 from their initial stack of $68,000 to maximize their winnings while keeping an eye on their total bankroll. Considering [constraint](#constraints) _3._ let's round down to $34,000. In subsequent rounds, they should stick to the policy of betting ~50% or roughly 1/2 of their stack size.
+Using the Kelly criterion, the candidates should bet $34,550.80 from their initial stake of $68,000 to maximize their winnings while keeping an eye on their total bankroll. Considering [constraint](#constraints) _3._ let's round down to $34,000. In subsequent rounds, they should stick to the policy of betting ~50% or roughly 1/2 of their stake size.
 
 Considering our [constraints](#constraints), this could lead to the best possible outcome of $204,000.
-This requires us to hit the triple twice in a row to reach the theoretical maximum (see [constraint](#constraints) 1). We will always bet 50% of our stack and round to the nearest multiple of $2,000.
+This requires us to hit the triple twice in a row to reach the theoretical maximum (see [constraint](#constraints) 1). We will always bet 50% of our stake and round to the nearest multiple of $2,000.
 
 | Round | Stake Before Round | Bet     | Winnings | Stake After Round | Comment                                                             |
 | ----- | ------------------ | ------- | -------- | ----------------- | ------------------------------------------------------------------- |
@@ -177,13 +177,13 @@ The Kelly criterion does not consider the game's complete spectrum of [constrain
 
 In this section, we ignore all maths strategies and focus purely on playing the game to deduce some strategy. Based on the results, we will simulate the game and see the best strategy. This will also help us understand the expected value for a given bet percentage.
 
-I recreated the code in Python, implemented the game, added the constraints, simulated 2^28 games (in total 268 million) with a fixed betting size strategy, and plotted the results on a chart. The code starts to bet 0.01%, plays 2,68 million games, and moves on to 0.02% to do it all over again until we reach a static bet size of 100% of the stack.
+I recreated the code in Python, implemented the game, added the constraints, simulated 2^28 games (in total 268 million) with a fixed betting size strategy, and plotted the results on a chart. The code starts to bet 0.01%, plays 2,68 million games, and moves on to 0.02% to do it all over again until we reach a static bet size of 100% of the stake.
 
 ![bruteforce_20240804_1758](resources/bruteforce_20240804_1758.png)
 
-The graph shows the average stack size in blue at the end of games and the minimum and maximum reached values during the simulations. On the x-axis are percentages of the stack size that was a bet for the reach round. Combining the large amount to simulated games alongside the [law of large numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers) allows us to assume the average stack size approximates the expected value.
+The graph shows the average stake size in blue at the end of games and the minimum and maximum reached values during the simulations. On the x-axis are percentages of the stake size that was a bet for the reach round. Combining the large amount to simulated games alongside the [law of large numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers) allows us to assume the average stake size approximates the expected value.
 
-The chart shows that the average resembles a step function, and the actual maximum occurs far down the line and peaks at ~98.6% of the bet size. These steps are explained mainly by the [constraints](#constraints) of the game. In particular, the fact that you can only bet multiples of $2,000 leads to this behavior of the function. For instance, see the step at the 50% tick. This is where you only need to play two games to max out the limit of 3x the initial stack size, given you hit the traitor tile and guessed the color correctly afterward. The table below details the bets and results at 50%.
+The chart shows that the average resembles a step function, and the actual maximum occurs far down the line and peaks at ~98.6% of the bet size. These steps are explained mainly by the [constraints](#constraints) of the game. In particular, the fact that you can only bet multiples of $2,000 leads to this behavior of the function. For instance, see the step at the 50% tick. This is where you only need to play two games to max out the limit of 3x the initial stake size, given you hit the traitor tile and guessed the color correctly afterward. The table below details the bets and results at 50%.
 
 | Round | Stake Before Round | Bet     | Winnings | Stake After Round | Comments                            |
 | ----- | ------------------ | ------- | -------- | ----------------- | ----------------------------------- |
@@ -200,7 +200,7 @@ With 49%, you must still play three games in this scenario. More games mean more
 | II    | $132,000          | $64,000 | $128,000  | $196,000         | here we guess the correct color |
 | III   | $196,000           | $4,000   | $8,000                                | $204,000          | |
 
-Something similar is going on with the spike at ~98.6%. We will first bet the whole stack around that value during the initial round. This allows us to win the maximum amount in the game possible by hitting a T-tile and stopping instantly after the first round.
+Something similar is going on with the spike at ~98.6%. We will first bet the whole stake around that value during the initial round. This allows us to win the maximum amount in the game possible by hitting a T-tile and stopping instantly after the first round.
 
 This solution does not manage the risk of going bust. We also did not yet explore the benefits of setting the betting size to different values between rounds. To tackle this, we will look into another solution.
 
@@ -224,7 +224,7 @@ def bankroll_to_reward(bankroll: int, initial_bankroll: int = 68000, max_bankrol
     return reward
 ```
 
-I decided to give the AI rewards purely based on the current bot size (aka `bankroll`) and punish it much more harshly for losses than gains. Here is an overview of different stack sizes and their associated rewards:
+I decided to give the AI rewards purely based on the current bot size (aka `bankroll`) and punish it much more harshly for losses than gains. Here is an overview of different stake sizes and their associated rewards:
 
 ![ml_reward_20240810_1134](resources/ml_reward_20240810_1134.png)
 As you can see, the function is skewed and punishes losses more harshly. I decided to use this function to approximate [human loss aversion](https://en.wikipedia.org/wiki/Loss_aversion) and to model the fact that the peers of our contestants would most likely be less happy about losing money than winning any. The AI was trained by playing 2^18 (262,144) games, but based on the algorithm's loss functions, the AI stabilized after ~50,000 steps.
@@ -240,19 +240,19 @@ After training my model, I let the AI play 2^18 games (262,144) and checked the 
 | % of games going bust                     | 12.13%      |
 | % of games winning the maximum            | 21.08%      |
 | average bet size overall                  | 0.59%       |
-| average stack size at the end of the game | $130,175.90 |
+| average stake size at the end of the game | $130,175.90 |
 
 KPIs are fine and all, but how does the AI actually behave in these games? I decided to get a better understanding by plotting the average bet size and its standard deviation on a graph.
 
 ![ml_betsize_20240810_1143](resources/ml_betsize_20240810_1143.png)
 
-The graph shows the average betting size as a bar chart. The black line shows the maximum and minimum bet sizes over all the rounds played. The AI always opens with a bet size of 59% of the stack size. In other words, $40,120. However, this is not a valid bet size and was always rounded to $40,000 since we can only bet increments of $2,000 (see [constraints](#constraints)). This, in part, is likely an artifact of my implementation. Instead of letting the AI bet a specific amount of money, I let the AI bet a percentage of its current stack while ensuring it bets at least the minimum amount of $2,000 as defined by the constraints of the game. In addition, converting the betting percentage back into actual bets introduced some rounding artifacts. This may also affect the learning process. But I'll give this implementation my stamp of "good-enough-for-the-time-being".
+The graph shows the average betting size as a bar chart. The black line shows the maximum and minimum bet sizes over all the rounds played. The AI always opens with a bet size of 59% of the stake size. In other words, $40,120. However, this is not a valid bet size and was always rounded to $40,000 since we can only bet increments of $2,000 (see [constraints](#constraints)). This, in part, is likely an artifact of my implementation. Instead of letting the AI bet a specific amount of money, I let the AI bet a percentage of its current stake while ensuring it bets at least the minimum amount of $2,000 as defined by the constraints of the game. In addition, converting the betting percentage back into actual bets introduced some rounding artifacts. This may also affect the learning process. But I'll give this implementation my stamp of "good-enough-for-the-time-being".
 
 The bet sizes in other rounds have large standard deviations. We cannot tell much for rounds two and three by looking at this graph. So, let's plot the complete decision tree of all games.
 
 ![ml_behavior_20240810_1144](resources/ml_behavior_20240810_1144.png)
 
-This admittedly cluttered graph shows how the AI was betting for each round and each given stack size. The AI always starts with $68,000 and places a bet of $40,000, wins by guessing the correct tile color, hitting a traitor pocket, or loses. When studying the chart more closely, the AI often decides to bet ~$40,000. In this article's [competition](#the-competition) section, we will look into a concrete instance of the AI choosing policies in a game.
+This admittedly cluttered graph shows how the AI was betting for each round and each given stake size. The AI always starts with $68,000 and places a bet of $40,000, wins by guessing the correct tile color, hitting a traitor pocket, or loses. When studying the chart more closely, the AI often decides to bet ~$40,000. In this article's [competition](#the-competition) section, we will look into a concrete instance of the AI choosing policies in a game.
 
 ### The Lazy Person-AI-Solution
 
@@ -285,7 +285,7 @@ To recap, this is what the contestants were going for:
 
 ### The Kelly Criterion
 
-We will always use the Kelly criterion and bet 50,81% of our stack size.
+We will always use the Kelly criterion and bet 50,81% of our stake size.
 We round our bets to fit to the closest multiple of $2,000.
 
 | Round | Stake Before Round | Bet | Winnings | Stake After Round |
@@ -296,7 +296,7 @@ We round our bets to fit to the closest multiple of $2,000.
 
 ### The Best Expected Value
 
-The brute-force solution suggested that the highest expected value is to bet ~98.6% of the stack size, which equates to the whole stack after rounding. As the LLM agreed to this solution, I will compound their betting policy in the table below.
+The brute-force solution suggested that the highest expected value is to bet ~98.6% of the stake size, which equates to the whole stake after rounding. As the LLM agreed to this solution, I will compound their betting policy in the table below.
 
 | Round | Stake Before Round | Bet | Winnings | Stake After Round |
 | ----- | ------------------ | --- | -------- | ----------------- |

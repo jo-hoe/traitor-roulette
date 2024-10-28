@@ -1,7 +1,5 @@
 # Traitor Roulette
 
-[![Test Status](https://github.com/jo-hoe/traitor-roulette/actions/workflows/test.yml/badge.svg)](https://github.com/jo-hoe/traitor-roulette/actions?workflow=test)
-
 This is the repo contains the code used for article [Gameshow Roulette — Human vs. Machine](https://medium.com/@joimonmedi/gameshow-roulette-human-vs-machine-273f401872e8).
 
 ## Prerequisites to run locally
